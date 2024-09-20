@@ -1,0 +1,8 @@
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph
+
+sealed class Route(val route: String) {
+    data object OnboardingScreen : Route("onboardingScreen")
+    data object SignUpScreen : Route("signUpScreen")
+    data object SignInScreen : Route("signInScreen")
+    data object FillPersonDataScreen : Route("fillPersonDataScreen")
+}

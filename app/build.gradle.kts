@@ -77,6 +77,9 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.4")
     implementation("io.github.jan-tennert.supabase:realtime-kt:2.5.4")
 
+    //datetime serialize for supabase 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+
     //ktor-client
     implementation("io.ktor:ktor-client-cio:2.3.12")
 

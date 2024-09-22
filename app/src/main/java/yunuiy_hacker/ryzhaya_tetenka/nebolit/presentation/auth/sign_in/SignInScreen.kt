@@ -44,15 +44,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpEvent
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpViewModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
 @Composable
-fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = hiltViewModel()) {
-    Scaffold(
-        Modifier.fillMaxSize(),
+fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = hiltViewModel()) {
+    Scaffold(Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.onBackground,
         bottomBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -67,8 +66,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    ClickableText(
-                        text = buildAnnotatedString { append("Зарегистрироваться") },
+                    ClickableText(text = buildAnnotatedString { append("Зарегистрироваться") },
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         onClick = {
                             navController.navigate(Route.SignUpScreen.route)
@@ -96,15 +94,14 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.email,
                 onValueChange = {
-                    viewModel.onEvent(SignInEvent.ChangeEmailEvent(it.drop(50)))
+                    viewModel.onEvent(SignInEvent.ChangeEmailEvent(it.take(50)))
                 },
                 label = {
                     Text(text = "E-mail")
                 },
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
+                    keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
                 )
             )
             Spacer(
@@ -114,7 +111,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.password,
                 onValueChange = {
-                    viewModel.onEvent(SignInEvent.ChangePasswordEvent(it.drop(50)))
+                    viewModel.onEvent(SignInEvent.ChangePasswordEvent(it.take(50)))
                 },
                 label = {
                     Text(text = "Пароль")
@@ -130,8 +127,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
                 visualTransformation = if (viewModel.state.passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
+                    keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
                 )
             )
             Spacer(
@@ -139,7 +135,9 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { },
+                onClick = {
+                    viewModel.onEvent(SignInEvent.OnClickButton)
+                },
                 shape = RoundedCornerShape(
                     BUTTON_CORNER_RADIUS
                 ),
@@ -149,6 +147,18 @@ fun SignInScreen(navController: NavHostController, viewModel: SIgnInViewModel = 
                 Text(text = "Войти")
             }
         }
+
+        if (viewModel.state.contentState.isLoading.value) {
+            LoadingDialog(onDismissRequest = {})
+        }
+
+        if (viewModel.state.showDialog)
+            ContentDialog(
+                text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
+                onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialog) })
+
+        if (viewModel.state.success)
+            navController.navigate(Route.HomeScreen.route)
     }
 }
 

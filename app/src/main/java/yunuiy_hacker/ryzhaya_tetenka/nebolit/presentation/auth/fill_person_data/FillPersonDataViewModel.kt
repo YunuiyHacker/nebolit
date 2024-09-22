@@ -19,23 +19,28 @@ class FillPersonDataViewModel @Inject constructor() : ViewModel() {
                     event.registrationAddress
                 validate()
             }
+
             is FillPersonDataEvent.ChangeLiveAddress -> {
                 state.liveAddress = event.liveAddress
                 validate()
             }
+
             is FillPersonDataEvent.ChangePolicy -> {
                 state.policy = event.policy
                 validate()
             }
+
             is FillPersonDataEvent.ChangeInsuranceCompany -> {
                 state.insuranceCompany =
                     event.insuranceCompany
                 validate()
             }
+
             is FillPersonDataEvent.ChangeHeight -> {
                 state.height = event.height
                 validate()
             }
+
             is FillPersonDataEvent.ChangeWeight -> {
                 state.weight = event.weight
                 validate()
@@ -46,10 +51,16 @@ class FillPersonDataViewModel @Inject constructor() : ViewModel() {
                 state.showDatePickerDialog = false
                 validate()
             }
+
+            is FillPersonDataEvent.OnClickButton -> registrationPatient()
         }
     }
 
     fun validate() {
+
+    }
+
+    fun registrationPatient() {
 
     }
 }

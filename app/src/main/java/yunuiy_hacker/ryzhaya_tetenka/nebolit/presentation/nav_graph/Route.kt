@@ -5,4 +5,6 @@ sealed class Route(val route: String) {
     data object SignUpScreen : Route("signUpScreen")
     data object SignInScreen : Route("signInScreen")
     data object FillPersonDataScreen : Route("fillPersonDataScreen")
+
+    data object HomeScreen : Route("homeScreen")
 }

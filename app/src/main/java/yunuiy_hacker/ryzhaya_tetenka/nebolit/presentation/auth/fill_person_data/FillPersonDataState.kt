@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.date_picker.SelectableNonFutureDates
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.state.ContentState
 
 class FillPersonDataState {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -29,4 +30,9 @@ class FillPersonDataState {
     var showDatePickerDialog by mutableStateOf(false)
 
     var valid by mutableStateOf(false)
+
+    var contentState by mutableStateOf(ContentState())
+    var showDialog by mutableStateOf(false)
+
+    var success by mutableStateOf(false)
 }

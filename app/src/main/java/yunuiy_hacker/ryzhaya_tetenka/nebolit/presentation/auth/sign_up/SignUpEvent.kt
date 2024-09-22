@@ -11,4 +11,9 @@ sealed class SignUpEvent() {
     data object TogglePolicyCheckboxEvent : SignUpEvent()
     data object ShowPolicyEvent : SignUpEvent()
     data object HidePolicyEvent : SignUpEvent()
+
+    data object OnClickButton : SignUpEvent()
+
+    data object ShowDialog : SignUpEvent()
+    data object HideDialog : SignUpEvent()
 }

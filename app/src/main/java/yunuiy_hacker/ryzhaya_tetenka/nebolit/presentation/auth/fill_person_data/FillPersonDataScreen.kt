@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
 import java.text.SimpleDateFormat
@@ -68,27 +69,30 @@ fun FillPersonDataScreen(
     }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.onBackground, topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(x = -24.dp),
-                    text = "Заполнение персональных данных",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = if (isSystemInDarkTheme()) Color(
-                    0xFF131313
-                ) else Color(0xFFF9F9F9)
+        TopAppBar(title = {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(x = -24.dp),
+                text = "Заполнение персональных данных",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
             )
+        }, navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack(
+                    route = Route.SignUpScreen.route,
+                    inclusive = true,
+                    saveState = true
+                )
+            }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = if (isSystemInDarkTheme()) Color(
+                0xFF131313
+            ) else Color(0xFFF9F9F9)
+        )
         )
     }) {
         Column(
@@ -117,19 +121,18 @@ fun FillPersonDataScreen(
                     Date(viewModel.state.dateOfBirth.selectedDateMillis!!)
                 )
                 else "не выбрана",
-                onValueChange = {
-                },
+                onValueChange = {},
                 label = {
                     Text(text = "Дата рождения")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -169,11 +172,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.registrationAddress,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeRegistrationAddress(it.drop(300)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangeRegistrationAddress(it.take(300)))
                 },
                 label = {
                     Text(text = "Адрес регистрации")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 )
@@ -183,11 +187,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.liveAddress,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeLiveAddress(it.drop(300)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangeLiveAddress(it.take(300)))
                 },
                 label = {
                     Text(text = "Фактический адрес")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 )
@@ -197,11 +202,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.policy,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangePolicy(it.drop(16)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangePolicy(it.take(16)))
                 },
                 label = {
                     Text(text = "Полис")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 )
@@ -211,11 +217,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.insuranceCompany,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeInsuranceCompany(it.drop(300)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangeInsuranceCompany(it.take(300)))
                 },
                 label = {
                     Text(text = "Страховая компания")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
                 )
@@ -225,11 +232,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.height,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeHeight(it.drop(300)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangeHeight(it.take(300)))
                 },
                 label = {
                     Text(text = "Рост")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                 )
@@ -239,11 +247,12 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.weight,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeWeight(it.drop(300)))
+                    viewModel.onEvent(FillPersonDataEvent.ChangeWeight(it.take(300)))
                 },
                 label = {
                     Text(text = "Вес")
-                }, maxLines = 1,
+                },
+                maxLines = 1,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                 )
@@ -263,14 +272,11 @@ fun FillPersonDataScreen(
             )
 
             if (viewModel.state.showDatePickerDialog) {
-                DatePickerDialog(
-                    onDismissRequest = { },
-                    confirmButton = {
-                        Button(onClick = { viewModel.onEvent(FillPersonDataEvent.HideDatePickerDialog) }) {
-                            Text(text = "Подтвердить", color = Color.White)
-                        }
+                DatePickerDialog(onDismissRequest = { }, confirmButton = {
+                    Button(onClick = { viewModel.onEvent(FillPersonDataEvent.HideDatePickerDialog) }) {
+                        Text(text = "Подтвердить", color = Color.White)
                     }
-                ) {
+                }) {
                     DatePicker(state = viewModel.state.dateOfBirth)
                 }
             }

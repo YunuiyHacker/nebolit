@@ -5,11 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model.User
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignUpModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.PATTERN_EMAIL
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val supabaseClient: SupabaseClient) :
+class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) :
     ViewModel() {
     val state by mutableStateOf(SignUpState())
 
@@ -53,6 +61,11 @@ class SignUpViewModel @Inject constructor(private val supabaseClient: SupabaseCl
 
             is SignUpEvent.HidePolicyEvent -> state.showPolicy =
                 false
+
+            is SignUpEvent.OnClickButton -> registration()
+
+            is SignUpEvent.ShowDialog -> state.showDialog = true
+            is SignUpEvent.HideDialog -> state.showDialog = false
         }
     }
 
@@ -78,5 +91,34 @@ class SignUpViewModel @Inject constructor(private val supabaseClient: SupabaseCl
                 state.valid = false
         else
             state.valid = false
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun registration() {
+        GlobalScope.launch {
+            try {
+                runBlocking {
+                    val user: User? = signUpUseCase.execute(
+                        signUpModel = SignUpModel(
+                            surname = state.surname,
+                            name = state.name,
+                            lastname = state.lastname,
+                            email = state.email,
+                            password = state.password
+                        )
+                    )
+
+                    state.contentState.isLoading.value = false
+                    if (user == null)
+                        throw Exception("Не удалось создать пользователя")
+                    else
+                        state.success = true
+                }
+            } catch (e: Exception) {
+                state.contentState.isLoading.value = false
+                state.contentState.exception.value = e
+                state.showDialog = true
+            }
+        }
     }
 }

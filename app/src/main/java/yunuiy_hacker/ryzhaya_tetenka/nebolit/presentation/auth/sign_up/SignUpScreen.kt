@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +59,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
@@ -86,9 +89,7 @@ fun SignUpScreen(
                     ClickableText(text = buildAnnotatedString { append("Войти") },
                         style = TextStyle(color = MaterialTheme.colorScheme.primary),
                         onClick = {
-                            navController.navigate(Route.SignInScreen.route) {
-                                popUpTo(Route.SignInScreen.route)
-                            }
+                            navController.popBackStack()
                         })
                 }
                 Spacer(modifier = Modifier.height(24.dp))
@@ -113,7 +114,7 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.fullName,
                 onValueChange = {
-                    viewModel.onEvent(SignUpEvent.ChangeFullNameEvent(it.drop(152)))
+                    viewModel.onEvent(SignUpEvent.ChangeFullNameEvent(it.take(152)))
                 },
                 label = {
                     Text(text = "ФИО")
@@ -126,10 +127,11 @@ fun SignUpScreen(
             Spacer(
                 modifier = Modifier.height(16.dp)
             )
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.email,
                 onValueChange = {
-                    viewModel.onEvent(SignUpEvent.ChangeEmailEvent(it.drop(50)))
+                    viewModel.onEvent(SignUpEvent.ChangeEmailEvent(it.take(50)))
                 },
                 label = {
                     Text(text = "E-mail")
@@ -146,7 +148,7 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.password,
                 onValueChange = {
-                    viewModel.onEvent(SignUpEvent.ChangePasswordEvent(it.drop(50)))
+                    viewModel.onEvent(SignUpEvent.ChangePasswordEvent(it.take(50)))
                 },
                 label = {
                     Text(text = "Пароль")
@@ -172,7 +174,7 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.confirmPassword,
                 onValueChange = {
-                    viewModel.onEvent(SignUpEvent.ChangeConfirmPasswordEvent(it.drop(50)))
+                    viewModel.onEvent(SignUpEvent.ChangeConfirmPasswordEvent(it.take(50)))
                 },
                 label = {
                     Text(text = "Потдверждение пароля")
@@ -199,7 +201,8 @@ fun SignUpScreen(
                     checked = viewModel.state.policyChecked,
                     onCheckedChange = {
                         viewModel.onEvent(SignUpEvent.TogglePolicyCheckboxEvent)
-                    })
+                    }, colors = CheckboxDefaults.colors(checkmarkColor = Color.White)
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 ClickableText(modifier = Modifier.offset(x = -14.dp), text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
@@ -217,7 +220,7 @@ fun SignUpScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    navController.navigate(Route.FillPersonDataScreen.route)
+                    viewModel.onEvent(SignUpEvent.OnClickButton)
                 },
                 shape = RoundedCornerShape(
                     BUTTON_CORNER_RADIUS
@@ -250,6 +253,21 @@ fun SignUpScreen(
                     }
                 }
             }
+        }
+
+        if (viewModel.state.contentState.isLoading.value) LoadingDialog(onDismissRequest = {
+            viewModel.onEvent(SignUpEvent.HideDialog)
+        })
+
+        if (viewModel.state.showDialog)
+            ContentDialog(
+                text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
+                onDismissRequest = {
+                    viewModel.onEvent(SignUpEvent.HideDialog)
+                })
+
+        if (viewModel.state.success) {
+            navController.navigate(Route.FillPersonDataScreen.route)
         }
     }
 }

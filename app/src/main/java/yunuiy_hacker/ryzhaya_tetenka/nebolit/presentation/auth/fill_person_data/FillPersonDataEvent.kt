@@ -11,4 +11,6 @@ sealed class FillPersonDataEvent {
 
     data object ShowDatePickerDialog : FillPersonDataEvent()
     data object HideDatePickerDialog : FillPersonDataEvent()
+
+    data object OnClickButton : FillPersonDataEvent()
 }

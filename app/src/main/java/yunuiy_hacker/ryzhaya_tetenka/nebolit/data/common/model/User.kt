@@ -1,7 +1,10 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
 data class User(
     val id: Int? = 0,
@@ -9,6 +12,5 @@ data class User(
     val name: String? = null,
     val lastname: String? = null,
     val email: String? = null,
-    val password: String? = null,
-    val phone: String? = null
-)
+    val password: String? = null
+) : Parcelable

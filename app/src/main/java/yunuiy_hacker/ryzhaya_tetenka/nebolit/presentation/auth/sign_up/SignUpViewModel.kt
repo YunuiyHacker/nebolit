@@ -4,21 +4,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jan.supabase.SupabaseClient
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model.User
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignUpModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.PATTERN_EMAIL
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) :
-    ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val signUpUseCase: SignUpUseCase,
+    private val saveReadPersonDataUseCase: SaveReadPersonDataUseCase
+) : ViewModel() {
     val state by mutableStateOf(SignUpState())
 
     fun onEvent(event: SignUpEvent) {
@@ -39,8 +40,7 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             }
 
             is SignUpEvent.ChangeConfirmPasswordEvent -> {
-                state.confirmPassword =
-                    event.confirmPassword
+                state.confirmPassword = event.confirmPassword
                 validate()
             }
 
@@ -51,16 +51,13 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
                 !state.confirmPasswordVisible
 
             is SignUpEvent.TogglePolicyCheckboxEvent -> {
-                state.policyChecked =
-                    !state.policyChecked
+                state.policyChecked = !state.policyChecked
                 validate()
             }
 
-            is SignUpEvent.ShowPolicyEvent -> state.showPolicy =
-                true
+            is SignUpEvent.ShowPolicyEvent -> state.showPolicy = true
 
-            is SignUpEvent.HidePolicyEvent -> state.showPolicy =
-                false
+            is SignUpEvent.HidePolicyEvent -> state.showPolicy = false
 
             is SignUpEvent.OnClickButton -> registration()
 
@@ -72,52 +69,52 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
     fun validate() {
         val fullNameSplit = state.fullName.split(" ")
 
-        if (fullNameSplit.size == 3)
-            if (PATTERN_EMAIL.matcher(state.email).matches())
-                if (state.password.length >= 8)
-                    if (state.password == state.confirmPassword)
-                        if (state.policyChecked) {
-                            state.valid = true
-                            state.surname = fullNameSplit[0]
-                            state.name = fullNameSplit[1]
-                            state.lastname = fullNameSplit[2]
-                        } else
-                            state.valid = false
-                    else
-                        state.valid = false
-                else
-                    state.valid = false
-            else
-                state.valid = false
-        else
-            state.valid = false
+        if (fullNameSplit.size == 3) if (PATTERN_EMAIL.matcher(state.email)
+                .matches()
+        ) if (state.password.length >= 8) if (state.password == state.confirmPassword) if (state.policyChecked) {
+            state.valid = true
+            state.surname = fullNameSplit[0]
+            state.name = fullNameSplit[1]
+            state.lastname = fullNameSplit[2]
+        } else state.valid = false
+        else state.valid = false
+        else state.valid = false
+        else state.valid = false
+        else state.valid = false
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun registration() {
         GlobalScope.launch {
-            try {
-                runBlocking {
-                    val user: User? = signUpUseCase.execute(
-                        signUpModel = SignUpModel(
-                            surname = state.surname,
-                            name = state.name,
-                            lastname = state.lastname,
-                            email = state.email,
-                            password = state.password
-                        )
+            runBlocking {
+                try {
+                    state.contentState.isLoading.value = true
+
+                    val signUpModel: SignUpModel = SignUpModel(
+                        surname = state.surname,
+                        name = state.name,
+                        lastname = state.lastname,
+                        email = state.email,
+                        password = state.password
                     )
 
+                    if (signUpUseCase.checkRegistrationByEmail.invoke(signUpModel)) {
+                        val user: User? = signUpUseCase.registrationUser(
+                            signUpModel = signUpModel
+                        )
+                        state.contentState.isLoading.value = false
+                        if (user == null) throw Exception("Не удалось создать пользователя")
+                        else {
+                            state.user = user
+                            saveReadPersonDataUseCase.saveUser.invoke(user)
+                            state.success = true
+                        }
+                    } else throw Exception("Пользователь с такой почтой уже зарегистрирован")
+                } catch (e: Exception) {
                     state.contentState.isLoading.value = false
-                    if (user == null)
-                        throw Exception("Не удалось создать пользователя")
-                    else
-                        state.success = true
+                    state.contentState.exception.value = e
+                    state.showDialog = true
                 }
-            } catch (e: Exception) {
-                state.contentState.isLoading.value = false
-                state.contentState.exception.value = e
-                state.showDialog = true
             }
         }
     }

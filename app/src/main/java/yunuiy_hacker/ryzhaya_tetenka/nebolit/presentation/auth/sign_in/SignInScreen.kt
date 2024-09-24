@@ -157,8 +157,10 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
                 text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
                 onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialog) })
 
-        if (viewModel.state.success)
+        if (viewModel.state.success) {
+            navController.currentBackStackEntry?.savedStateHandle?.set("user", viewModel.state.user)
             navController.navigate(Route.HomeScreen.route)
+        }
     }
 }
 

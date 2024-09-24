@@ -39,7 +39,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
 
 @Composable
 fun OnboardingScreen(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
     Surface(color = MaterialTheme.colorScheme.onBackground) {
         Column(

@@ -1,7 +1,7 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model
 
 import kotlinx.datetime.LocalDate
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model.User
+
 
 data class RegistrationPatientModel(
     val user_id: Int,

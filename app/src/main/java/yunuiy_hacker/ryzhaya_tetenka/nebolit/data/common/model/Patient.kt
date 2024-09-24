@@ -1,7 +1,8 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model
 
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.parent.RoleObject
 
 @Serializable
 data class Patient(
@@ -14,5 +15,6 @@ data class Patient(
     val insurance_company: String? = null,
     val policy: String? = null,
     val height: Int? = null,
-    val weight: Float? = null
-)
+    val weight: Float? = null,
+    val user: User? = null
+) : RoleObject()

@@ -7,4 +7,13 @@ sealed class Route(val route: String) {
     data object FillPersonDataScreen : Route("fillPersonDataScreen")
 
     data object HomeScreen : Route("homeScreen")
+
+    fun withIntArguments(vararg args: Int): String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }

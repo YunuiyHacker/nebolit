@@ -3,6 +3,7 @@ package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.state.ContentState
 
 class SignUpState {
@@ -27,4 +28,6 @@ class SignUpState {
     var showDialog by mutableStateOf(false)
 
     var success by mutableStateOf(false)
+
+    var user by mutableStateOf(User())
 }

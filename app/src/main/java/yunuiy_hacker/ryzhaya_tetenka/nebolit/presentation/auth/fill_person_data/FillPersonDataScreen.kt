@@ -1,9 +1,6 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data
 
-import android.widget.Button
-import android.widget.ToggleButton
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,7 +26,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -42,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isNumeric
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
@@ -62,7 +58,7 @@ import java.util.Date
 @Composable
 fun FillPersonDataScreen(
     viewModel: FillPersonDataViewModel = hiltViewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
     val dateInteractionSource = remember {
         MutableInteractionSource()
@@ -70,20 +66,20 @@ fun FillPersonDataScreen(
 
     Scaffold(containerColor = MaterialTheme.colorScheme.onBackground, topBar = {
         TopAppBar(title = {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset(x = -24.dp),
-                text = "Заполнение персональных данных",
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center
-            )
+            Column {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(x = -24.dp),
+                    text = "Заполнение персональных данных",
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }, navigationIcon = {
             IconButton(onClick = {
                 navController.popBackStack(
-                    route = Route.SignUpScreen.route,
-                    inclusive = true,
-                    saveState = true
+                    route = Route.SignUpScreen.route, inclusive = true, saveState = true
                 )
             }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
@@ -202,14 +198,15 @@ fun FillPersonDataScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.policy,
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangePolicy(it.take(16)))
+                    if (it.isNumeric())
+                        viewModel.onEvent(FillPersonDataEvent.ChangePolicy(it.take(16)))
                 },
                 label = {
                     Text(text = "Полис")
                 },
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -230,9 +227,10 @@ fun FillPersonDataScreen(
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = viewModel.state.height,
+                value = viewModel.state.height.toString(),
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeHeight(it.take(300)))
+                    if (it.isNumeric())
+                        viewModel.onEvent(FillPersonDataEvent.ChangeHeight(it.toInt()))
                 },
                 label = {
                     Text(text = "Рост")
@@ -245,9 +243,10 @@ fun FillPersonDataScreen(
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = viewModel.state.weight,
+                value = viewModel.state.weight.toString(),
                 onValueChange = {
-                    viewModel.onEvent(FillPersonDataEvent.ChangeWeight(it.take(300)))
+                    if (it.isNumeric())
+                        viewModel.onEvent(FillPersonDataEvent.ChangeWeight(it.toFloat()))
                 },
                 label = {
                     Text(text = "Вес")
@@ -260,9 +259,12 @@ fun FillPersonDataScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { },
+                onClick = {
+                    viewModel.onEvent(FillPersonDataEvent.OnClickButton)
+                },
                 shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
-                colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(contentColor = Color.White),
+                enabled = viewModel.state.valid
             ) {
                 Text(text = "Зарегистрироваться")
             }
@@ -279,6 +281,20 @@ fun FillPersonDataScreen(
                 }) {
                     DatePicker(state = viewModel.state.dateOfBirth)
                 }
+            }
+
+            if (viewModel.state.contentState.isLoading.value)
+                LoadingDialog(onDismissRequest = {})
+
+            if (viewModel.state.showDialog)
+                ContentDialog(
+                    text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
+                    onDismissRequest = {
+                        viewModel.onEvent(FillPersonDataEvent.HideDialog)
+                    })
+
+            if (viewModel.state.success) {
+                navController.navigate(Route.HomeScreen.route)
             }
         }
     }

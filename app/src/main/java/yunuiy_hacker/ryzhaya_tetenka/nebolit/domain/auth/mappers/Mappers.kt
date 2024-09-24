@@ -1,10 +1,9 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.mappers
 
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model.Patient
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.net.model.User
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Patient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.RegistrationPatientModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignUpModel
-import kotlin.math.sign
 
 fun SignUpModel.toDataUser(): User {
     return User(

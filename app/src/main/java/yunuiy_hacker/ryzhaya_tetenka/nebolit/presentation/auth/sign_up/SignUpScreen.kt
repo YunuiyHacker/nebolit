@@ -58,6 +58,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.savedstate.SavedStateRegistry
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
@@ -66,11 +67,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
 @Composable
 fun SignUpScreen(
-    navController: NavHostController = rememberNavController(),
-    viewModel: SignUpViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val focusManager = LocalFocusManager.current
-    val isDarkMode = isSystemInDarkTheme()
     Scaffold(Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.onBackground,
         bottomBar = {
@@ -197,11 +195,13 @@ fun SignUpScreen(
             Row(
                 modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
-                Checkbox(modifier = Modifier.offset(x = -14.dp),
+                Checkbox(
+                    modifier = Modifier.offset(x = -14.dp),
                     checked = viewModel.state.policyChecked,
                     onCheckedChange = {
                         viewModel.onEvent(SignUpEvent.TogglePolicyCheckboxEvent)
-                    }, colors = CheckboxDefaults.colors(checkmarkColor = Color.White)
+                    },
+                    colors = CheckboxDefaults.colors(checkmarkColor = Color.White)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 ClickableText(modifier = Modifier.offset(x = -14.dp), text = buildAnnotatedString {
@@ -259,21 +259,13 @@ fun SignUpScreen(
             viewModel.onEvent(SignUpEvent.HideDialog)
         })
 
-        if (viewModel.state.showDialog)
-            ContentDialog(
-                text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
-                onDismissRequest = {
-                    viewModel.onEvent(SignUpEvent.HideDialog)
-                })
+        if (viewModel.state.showDialog) ContentDialog(text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
+            onDismissRequest = {
+                viewModel.onEvent(SignUpEvent.HideDialog)
+            })
 
         if (viewModel.state.success) {
-            navController.navigate(Route.FillPersonDataScreen.route)
+            navController.navigate(Route.FillPersonDataScreen.withIntArguments(viewModel.state.user.id!!))
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun SignUpScreenPreview() {
-    SignUpScreen()
 }

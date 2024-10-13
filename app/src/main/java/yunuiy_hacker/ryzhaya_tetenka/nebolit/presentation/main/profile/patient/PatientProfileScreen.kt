@@ -95,7 +95,7 @@ fun PatientProfileScreen(
                     ) {
                         Column(
                             modifier = Modifier.background(
-                                if (isSystemInDarkTheme()) Primary else Color.LightGray,
+                                if (viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value) Primary else Color.LightGray,
                                 shape = CircleShape
                             ),
                         ) {

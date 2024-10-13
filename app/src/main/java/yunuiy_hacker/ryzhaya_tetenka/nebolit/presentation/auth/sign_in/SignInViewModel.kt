@@ -100,8 +100,14 @@ class SignInViewModel @Inject constructor(
 
                             if (roleObject is Patient)
                                 saveReadPersonDataUseCase.savePatient(roleObject as Patient)
-                            else if (roleObject is Doctor)
-                                saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+                            else if (roleObject is Doctor) {
+                                val specialization =
+                                    signInUseCase.getSpecializationById.invoke(roleObject.specializationId!!)
+                                if (specialization != null) {
+                                    roleObject.specialization = specialization
+                                    saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+                                }
+                            }
 
                             state.success = true
                         }

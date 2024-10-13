@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Patient
 
 class PatientProfileState {
-    var isDarkTheme by mutableStateOf(false)
-
     var passportVisible by mutableStateOf(false)
     var moreInformationVisible by mutableStateOf(false)
 

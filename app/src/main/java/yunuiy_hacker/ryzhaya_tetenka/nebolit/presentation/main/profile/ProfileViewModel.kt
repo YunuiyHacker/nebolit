@@ -13,7 +13,8 @@ class ProfileViewModel @Inject constructor(private val saveReadPersonDataUseCase
     val state by mutableStateOf(ProfileState())
 
     init {
-        if (saveReadPersonDataUseCase.readPatient.invoke() != null)
+        val patient = saveReadPersonDataUseCase.readPatient.invoke()
+        if (patient?.id!! > 0)
             state.isPatientAccount = true
         else
             state.isPatientAccount = false

@@ -16,6 +16,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefs
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.CheckRegistrationByEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.DefineRole
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.GetPassportById
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.GetSpecializationById
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.LoadRoleObject
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadPatient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadUser
@@ -61,7 +62,8 @@ object AppModule {
             logIn = LogIn(supabaseClient),
             defineRole = DefineRole(supabaseClient),
             loadRoleObject = LoadRoleObject(supabaseClient),
-            getPassportById = GetPassportById(supabaseClient)
+            getPassportById = GetPassportById(supabaseClient),
+            getSpecializationById = GetSpecializationById(supabaseClient)
         )
 
     @Singleton

@@ -61,10 +61,12 @@ class SignInViewModel @Inject constructor(
     private fun logIn() {
         state.contentState.isLoading.value = true
 
+        var user: User?
+
         GlobalScope.launch {
             try {
                 runBlocking {
-                    val user: User? = signInUseCase.logIn.invoke(
+                    user = signInUseCase.logIn.invoke(
                         signInModel = SignInModel(
                             email = state.email, password = state.password
                         )
@@ -76,23 +78,33 @@ class SignInViewModel @Inject constructor(
                         )
                         state.showDialog = true
                     } else {
-                        saveReadPersonDataUseCase.saveUser.invoke(user)
-
-                        val role: Role = signInUseCase.defineRole.invoke(user_id = user.id!!)
-
-                        val roleObject: RoleObject? = signInUseCase.loadRoleObject.invoke(
-                            loadRoleObjectModel = LoadRoleObjectModel(
-                                user_id = user.id,
-                                role = role
+                        val passport = signInUseCase.getPassportById.invoke(user!!.passportId!!)
+                        if (passport == null) {
+                            state.contentState.exception.value
+                            throw Exception(
+                                "К сожалению, мы не нашли в базе ваш паспорт, а без него войти нельзя"
                             )
-                        )
+                            state.showDialog = true
+                        } else {
+                            saveReadPersonDataUseCase.savePassport.invoke(passport!!)
+                            saveReadPersonDataUseCase.saveUser.invoke(user!!)
 
-                        if (roleObject is Patient)
-                            saveReadPersonDataUseCase.savePatient(roleObject as Patient)
-                        else if (roleObject is Doctor)
-                            saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+                            val role: Role = signInUseCase.defineRole.invoke(user_id = user!!.id!!)
 
-                        state.success = true
+                            val roleObject: RoleObject? = signInUseCase.loadRoleObject.invoke(
+                                loadRoleObjectModel = LoadRoleObjectModel(
+                                    user_id = user!!.id!!,
+                                    role = role
+                                )
+                            )
+
+                            if (roleObject is Patient)
+                                saveReadPersonDataUseCase.savePatient(roleObject as Patient)
+                            else if (roleObject is Doctor)
+                                saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+
+                            state.success = true
+                        }
                     }
                     state.contentState.isLoading.value = false
                 }

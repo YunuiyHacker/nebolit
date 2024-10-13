@@ -7,8 +7,8 @@ class SaveDoctor(private val sharedPrefsHelper: SharedPrefsHelper) {
 
     operator fun invoke(doctor: Doctor) {
         sharedPrefsHelper.doctor_id = doctor.id!!
-        sharedPrefsHelper.specialization_id = doctor.specialization_id!!
+        sharedPrefsHelper.specialization_id = doctor.specializationId!!
         sharedPrefsHelper.specialization_title = doctor.specialization?.title
-        sharedPrefsHelper.licenze_number = doctor.licenze_number
+        sharedPrefsHelper.licenze_number = doctor.licenzeNumber
     }
 }

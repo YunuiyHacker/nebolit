@@ -7,9 +7,8 @@ class SaveUser(private val sharedPrefsHelper: SharedPrefsHelper) {
 
     operator fun invoke(user: User) {
         sharedPrefsHelper.user_id = user.id!!
-        sharedPrefsHelper.surname = user.surname
-        sharedPrefsHelper.name = user.name
-        sharedPrefsHelper.lastname = user.lastname
         sharedPrefsHelper.email = user.email
+        if (user.passportId != null)
+            sharedPrefsHelper.passport_id = user.passportId
     }
 }

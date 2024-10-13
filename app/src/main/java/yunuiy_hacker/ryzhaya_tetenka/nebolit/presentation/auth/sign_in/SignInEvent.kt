@@ -6,8 +6,8 @@ sealed class SignInEvent {
 
     data object TogglePasswordVisibilityEvent : SignInEvent()
 
-    data object OnClickButton : SignInEvent()
+    data object OnClickButtonEvent : SignInEvent()
 
-    data object ShowDialog : SignInEvent()
-    data object HideDialog : SignInEvent()
+    data object ShowDialogEvent : SignInEvent()
+    data object HideDialogEvent : SignInEvent()
 }

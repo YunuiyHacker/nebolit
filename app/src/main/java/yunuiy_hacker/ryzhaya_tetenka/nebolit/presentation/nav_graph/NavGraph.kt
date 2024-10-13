@@ -1,36 +1,14 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -38,7 +16,9 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.FillPersonDataViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_in.SignInScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.edit_person_data.EditPersonDataScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.home.HomeScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.profile.ProfileScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.onboarding.OnboardingScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -86,14 +66,30 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             })
         ) { entry ->
             val viewModel: FillPersonDataViewModel = hiltViewModel()
-            viewModel.state.user_id = entry.arguments?.getInt("user_id")!!
+            viewModel.state.userId = entry.arguments?.getInt("user_id")!!
             FillPersonDataScreen(
                 navController = navController
             )
         }
 
-        composable(route = Route.HomeScreen.route) {
+        composable(route = Route.HomeScreen.route,
+            enterTransition = { EnterTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popExitTransition = { ExitTransition.None }) {
             HomeScreen(navController = navController)
+        }
+
+        composable(route = Route.ProfileScreen.route,
+            enterTransition = { EnterTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popExitTransition = { ExitTransition.None }) {
+            ProfileScreen(navController = navController)
+        }
+
+        composable(route = Route.EditPersonDataScreen.route) {
+            EditPersonDataScreen(navController = navController)
         }
     }
 }

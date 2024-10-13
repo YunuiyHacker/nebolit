@@ -10,7 +10,7 @@ class DefineRole(private val supabaseClient: SupabaseClient) {
     suspend operator fun invoke(user_id: Int): Role {
         val patient: Patient? = supabaseClient.postgrest.from("patients").select {
             filter {
-                Patient::user_id eq user_id
+                Patient::userId eq user_id
             }
         }.decodeSingleOrNull<Patient>()
         if (patient != null)

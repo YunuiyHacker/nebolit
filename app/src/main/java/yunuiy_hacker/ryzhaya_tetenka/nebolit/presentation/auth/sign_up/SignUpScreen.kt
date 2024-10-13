@@ -21,13 +21,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -36,10 +40,16 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -53,22 +63,29 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.savedstate.SavedStateRegistry
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     navController: NavHostController, viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    var bottomSheetScaffoldHeight by remember {
+        mutableStateOf(0)
+    }
+
     Scaffold(Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.onBackground,
         bottomBar = {
@@ -108,23 +125,6 @@ fun SignUpScreen(
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = viewModel.state.fullName,
-                onValueChange = {
-                    viewModel.onEvent(SignUpEvent.ChangeFullNameEvent(it.take(152)))
-                },
-                label = {
-                    Text(text = "ФИО")
-                },
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                )
-            )
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.email,
@@ -208,7 +208,7 @@ fun SignUpScreen(
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
                         append("Я ознакомился с ")
                         withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                            append("правилами предоставления услуг")
+                            append("политикой конфиденциальности")
                         }
                         append(" и принимаю их")
                     }
@@ -233,24 +233,24 @@ fun SignUpScreen(
         }
 
         if (viewModel.state.showPolicy) {
-            Dialog(onDismissRequest = { viewModel.onEvent(SignUpEvent.HidePolicyEvent) }) {
+            ModalBottomSheet(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                onDismissRequest = { viewModel.onEvent(SignUpEvent.HidePolicyEvent) }) {
                 Column(
-                    modifier = Modifier.background(
-                        color = MaterialTheme.colorScheme.background,
-                        shape = RoundedCornerShape(16.dp)
-                    )
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(16.dp)
+                        .onGloballyPositioned {
+                            bottomSheetScaffoldHeight = it.size.height
+                        }
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "Правила предоставления услуг",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                    Text(
+                        text = "Настоящий документ \"Политика конфиденциальности\" устанавливает, что разработчик и обладатель данного приложения Нуркаев Альфир Харисович не несет никакой ответственности в случае утечки персональных данных пользователей и полностью отказывается от компенсирования в любом его виде. " +
+                                "\n\n" +
+                                "Документ подписан и утвержден генеральным директором ООО \"Рыжая тетенька\" Нуркаевым Альфиром Харисовичем 11.10.2024",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
         }

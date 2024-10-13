@@ -42,10 +42,10 @@ class SignInViewModel @Inject constructor(
             is SignInEvent.TogglePasswordVisibilityEvent -> state.passwordVisible =
                 !state.passwordVisible
 
-            is SignInEvent.OnClickButton -> logIn()
+            is SignInEvent.OnClickButtonEvent -> logIn()
 
-            is SignInEvent.ShowDialog -> state.showDialog = true
-            is SignInEvent.HideDialog -> state.showDialog = false
+            is SignInEvent.ShowDialogEvent -> state.showDialog = true
+            is SignInEvent.HideDialogEvent -> state.showDialog = false
         }
     }
 

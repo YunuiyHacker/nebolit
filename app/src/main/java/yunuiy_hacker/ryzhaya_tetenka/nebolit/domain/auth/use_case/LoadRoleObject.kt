@@ -14,13 +14,13 @@ class LoadRoleObject(private val supabaseClient: SupabaseClient) {
         return if (loadRoleObjectModel.role == Role.Patient) supabaseClient.postgrest.from("patients")
             .select {
                 filter {
-                    Patient::user_id eq loadRoleObjectModel.user_id
+                    Patient::userId eq loadRoleObjectModel.user_id
                 }
             }.decodeSingleOrNull<Patient>()
         else
             supabaseClient.postgrest.from("doctors").select {
                 filter {
-                    Doctor::user_id eq loadRoleObjectModel.user_id
+                    Doctor::userId eq loadRoleObjectModel.user_id
                 }
             }.decodeSingleOrNull<Doctor>()
     }

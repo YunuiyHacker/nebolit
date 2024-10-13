@@ -6,12 +6,10 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 class ReadUser(private val sharedPrefsHelper: SharedPrefsHelper) {
 
     operator fun invoke(): User? {
-        return User(
+        return if (sharedPrefsHelper.user_id == null || sharedPrefsHelper.user_id == 0) null else User(
             id = sharedPrefsHelper.user_id,
-            surname = sharedPrefsHelper.surname,
-            name = sharedPrefsHelper.name,
-            lastname = sharedPrefsHelper.lastname,
-            email = sharedPrefsHelper.email
+            email = sharedPrefsHelper.email,
+            passportId = sharedPrefsHelper.passport_id
         )
     }
 }

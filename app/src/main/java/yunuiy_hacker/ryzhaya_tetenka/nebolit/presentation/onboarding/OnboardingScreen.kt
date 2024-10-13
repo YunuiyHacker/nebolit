@@ -16,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -39,8 +41,11 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
 
 @Composable
 fun OnboardingScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: OnboardingViewModel = hiltViewModel()
 ) {
+    val saved = viewModel.dataStoreHelper.getAppEntry().collectAsState(initial = false)
+
     Surface(color = MaterialTheme.colorScheme.onBackground) {
         Column(
             modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
@@ -75,9 +80,8 @@ fun OnboardingScreen(
                     .padding(
                         horizontal = 24.dp
                     ), onClick = {
-                    navController.navigate(Route.SignInScreen.route) {
-                        popUpTo(0)
-                    }
+                    viewModel.onEvent(OnboardingEvent.SaveAppEntry)
+                    navController.navigate(Route.SignInScreen.route)
                 }, shape = RoundedCornerShape(BUTTON_CORNER_RADIUS)
             ) {
                 Text(text = "Продолжить", color = Color.White)

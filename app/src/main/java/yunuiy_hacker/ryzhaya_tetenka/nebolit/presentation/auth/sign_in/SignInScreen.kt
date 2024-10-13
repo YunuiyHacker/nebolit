@@ -44,8 +44,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.ContentDialog
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.dialog.LoadingDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
@@ -136,7 +136,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    viewModel.onEvent(SignInEvent.OnClickButton)
+                    viewModel.onEvent(SignInEvent.OnClickButtonEvent)
                 },
                 shape = RoundedCornerShape(
                     BUTTON_CORNER_RADIUS
@@ -155,7 +155,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
         if (viewModel.state.showDialog)
             ContentDialog(
                 text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
-                onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialog) })
+                onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialogEvent) })
 
         if (viewModel.state.success) {
             navController.currentBackStackEntry?.savedStateHandle?.set("user", viewModel.state.user)

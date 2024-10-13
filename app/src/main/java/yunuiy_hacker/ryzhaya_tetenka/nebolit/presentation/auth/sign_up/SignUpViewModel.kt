@@ -24,11 +24,6 @@ class SignUpViewModel @Inject constructor(
 
     fun onEvent(event: SignUpEvent) {
         when (event) {
-            is SignUpEvent.ChangeFullNameEvent -> {
-                state.fullName = event.fullName
-                validate()
-            }
-
             is SignUpEvent.ChangeEmailEvent -> {
                 state.email = event.email
                 validate()
@@ -67,18 +62,9 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun validate() {
-        val fullNameSplit = state.fullName.split(" ")
-
-        if (fullNameSplit.size == 3) if (PATTERN_EMAIL.matcher(state.email)
-                .matches()
-        ) if (state.password.length >= 8) if (state.password == state.confirmPassword) if (state.policyChecked) {
+        if (state.password.length >= 8) if (state.password == state.confirmPassword) if (state.policyChecked) {
             state.valid = true
-            state.surname = fullNameSplit[0]
-            state.name = fullNameSplit[1]
-            state.lastname = fullNameSplit[2]
         } else state.valid = false
-        else state.valid = false
-        else state.valid = false
         else state.valid = false
         else state.valid = false
     }
@@ -91,9 +77,6 @@ class SignUpViewModel @Inject constructor(
                     state.contentState.isLoading.value = true
 
                     val signUpModel: SignUpModel = SignUpModel(
-                        surname = state.surname,
-                        name = state.name,
-                        lastname = state.lastname,
                         email = state.email,
                         password = state.password
                     )
@@ -102,7 +85,6 @@ class SignUpViewModel @Inject constructor(
                         val user: User? = signUpUseCase.registrationUser(
                             signUpModel = signUpModel
                         )
-                        state.contentState.isLoading.value = false
                         if (user == null) throw Exception("Не удалось создать пользователя")
                         else {
                             state.user = user

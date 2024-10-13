@@ -6,5 +6,7 @@ data class SaveReadPersonDataUseCase(
     val savePatient: SavePatient,
     val readPatient: ReadPatient,
     val saveDoctor: SaveDoctor,
-    val readDoctor: ReadDoctor
+    val readDoctor: ReadDoctor,
+    val savePassport: SavePassport,
+    val readPassport: ReadPassport
 )

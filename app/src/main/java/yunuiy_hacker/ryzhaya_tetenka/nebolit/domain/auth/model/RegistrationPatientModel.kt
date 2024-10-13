@@ -5,8 +5,6 @@ import kotlinx.datetime.LocalDate
 
 data class RegistrationPatientModel(
     val user_id: Int,
-    val date_of_birth: LocalDate,
-    val sex: Boolean,
     val registraion_address: String,
     val live_address: String,
     val policy: String,

@@ -11,6 +11,7 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefsHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.CheckRegistrationByEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.DefineRole
@@ -24,9 +25,13 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPerson
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveUser
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.LogIn
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadDoctor
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadPassport
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RecordPassportUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveDoctor
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SavePassport
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignInUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.UpdateUserPassportIdUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.API_KEY
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.URL
 import javax.inject.Singleton
@@ -66,13 +71,28 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRegistrationPatient(supabaseClient: SupabaseClient): RegistrationPatientUseCase =
+    fun provideRecordPassportUseCase(supabaseClient: SupabaseClient): RecordPassportUseCase =
+        RecordPassportUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideUpdateUserPassportIdUseCase(supabaseClient: SupabaseClient): UpdateUserPassportIdUseCase =
+        UpdateUserPassportIdUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideRegistrationPatientUseCase(supabaseClient: SupabaseClient): RegistrationPatientUseCase =
         RegistrationPatientUseCase(supabaseClient)
 
     @Singleton
     @Provides
     fun provideSharedPrefsHelper(@ApplicationContext context: Context): SharedPrefsHelper =
         SharedPrefsHelper(context)
+
+    @Singleton
+    @Provides
+    fun provideDataStoreHelper(@ApplicationContext context: Context): DataStoreHelper =
+        DataStoreHelper(context)
 
     @Singleton
     @Provides
@@ -85,6 +105,8 @@ object AppModule {
             savePatient = SavePatient(sharedPrefsHelper),
             readPatient = ReadPatient(sharedPrefsHelper),
             saveDoctor = SaveDoctor(sharedPrefsHelper),
-            readDoctor = ReadDoctor(sharedPrefsHelper)
+            readDoctor = ReadDoctor(sharedPrefsHelper),
+            savePassport = SavePassport(sharedPrefsHelper),
+            readPassport = ReadPassport(sharedPrefsHelper)
         )
 }

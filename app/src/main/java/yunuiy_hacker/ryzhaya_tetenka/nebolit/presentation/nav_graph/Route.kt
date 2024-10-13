@@ -7,6 +7,10 @@ sealed class Route(val route: String) {
     data object FillPersonDataScreen : Route("fillPersonDataScreen")
 
     data object HomeScreen : Route("homeScreen")
+    data object ProfileScreen : Route("profileScreen")
+
+    data object EditPersonDataScreen : Route("editPersonDataScreen")
+
 
     fun withIntArguments(vararg args: Int): String {
         return buildString {

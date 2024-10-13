@@ -8,11 +8,16 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Passport
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Patient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.date_picker.SelectableNonFutureDates
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.state.ContentState
 
 class FillPersonDataState {
+    var surname by mutableStateOf("")
+    var name by mutableStateOf("")
+    var lastname by mutableStateOf("")
+
     @OptIn(ExperimentalMaterial3Api::class)
     var dateOfBirth by mutableStateOf(
         DatePickerState(
@@ -20,7 +25,21 @@ class FillPersonDataState {
             selectableDates = SelectableNonFutureDates
         )
     )
+    var addressOfBirth by mutableStateOf("")
+    var series by mutableStateOf("")
+    var code by mutableStateOf("")
     var sex by mutableStateOf(true)
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    var issueDate by mutableStateOf(
+        DatePickerState(
+            CalendarLocale("ru"),
+            selectableDates = SelectableNonFutureDates
+        )
+    )
+    var issueOrganization by mutableStateOf("")
+    var departmentCode by mutableStateOf("")
+
     var registrationAddress by mutableStateOf("")
     var liveAddress by mutableStateOf("")
     var policy by mutableStateOf("")
@@ -28,7 +47,8 @@ class FillPersonDataState {
     var height by mutableIntStateOf(0)
     var weight by mutableFloatStateOf(0.0f)
 
-    var showDatePickerDialog by mutableStateOf(false)
+    var nowSelectableDateOfBirth by mutableStateOf(false)
+    var nowSelectableIssueDate by mutableStateOf(false)
 
     var valid by mutableStateOf(false)
 
@@ -37,6 +57,7 @@ class FillPersonDataState {
 
     var success by mutableStateOf(false)
 
-    var user_id by mutableIntStateOf(0)
+    var userId by mutableIntStateOf(0)
+    var passport by mutableStateOf(Passport())
     var patient by mutableStateOf(Patient())
 }

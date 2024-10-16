@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.plus
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.sexToString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
@@ -147,7 +149,7 @@ fun PassportComposable(modifier: Modifier = Modifier, user: User) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = user?.passport?.dateOfBirth.toPassportDate(),
+                        text = user?.passport?.dateOfBirth?.plus(1, DateTimeUnit.DAY).toPassportDate(),
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 14.sp
                     )

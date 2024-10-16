@@ -34,6 +34,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SavePassport
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignInUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.UpdateUserPassportIdUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.UpdatePatientDataUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.API_KEY
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.URL
 import javax.inject.Singleton
@@ -57,14 +58,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSignInUseCase(supabaseClient: SupabaseClient): SignInUseCase =
-        SignInUseCase(
-            logIn = LogIn(supabaseClient),
-            defineRole = DefineRole(supabaseClient),
-            loadRoleObject = LoadRoleObject(supabaseClient),
-            getPassportById = GetPassportById(supabaseClient),
-            getSpecializationById = GetSpecializationById(supabaseClient)
-        )
+    fun provideSignInUseCase(supabaseClient: SupabaseClient): SignInUseCase = SignInUseCase(
+        logIn = LogIn(supabaseClient),
+        defineRole = DefineRole(supabaseClient),
+        loadRoleObject = LoadRoleObject(supabaseClient),
+        getPassportById = GetPassportById(supabaseClient),
+        getSpecializationById = GetSpecializationById(supabaseClient)
+    )
 
     @Singleton
     @Provides
@@ -102,15 +102,22 @@ object AppModule {
     @Provides
     fun provideSaveReadPersonDataUserUseCase(
         sharedPrefsHelper: SharedPrefsHelper
-    ): SaveReadPersonDataUseCase =
-        SaveReadPersonDataUseCase(
-            saveUser = SaveUser(sharedPrefsHelper),
-            readUser = ReadUser(sharedPrefsHelper),
-            savePatient = SavePatient(sharedPrefsHelper),
-            readPatient = ReadPatient(sharedPrefsHelper),
-            saveDoctor = SaveDoctor(sharedPrefsHelper),
-            readDoctor = ReadDoctor(sharedPrefsHelper),
-            savePassport = SavePassport(sharedPrefsHelper),
-            readPassport = ReadPassport(sharedPrefsHelper)
-        )
+    ): SaveReadPersonDataUseCase = SaveReadPersonDataUseCase(
+        saveUser = SaveUser(sharedPrefsHelper),
+        readUser = ReadUser(sharedPrefsHelper),
+        savePatient = SavePatient(sharedPrefsHelper),
+        readPatient = ReadPatient(sharedPrefsHelper),
+        saveDoctor = SaveDoctor(sharedPrefsHelper),
+        readDoctor = ReadDoctor(sharedPrefsHelper),
+        savePassport = SavePassport(sharedPrefsHelper),
+        readPassport = ReadPassport(sharedPrefsHelper)
+    )
+
+    @Singleton
+    @Provides
+    fun provideUpdatePatientDataUseCase(
+        supabaseClient: SupabaseClient, sharedPrefsHelper: SharedPrefsHelper
+    ): UpdatePatientDataUseCase = UpdatePatientDataUseCase(
+        supabaseClient = supabaseClient, sharedPrefsHelper = sharedPrefsHelper
+    )
 }

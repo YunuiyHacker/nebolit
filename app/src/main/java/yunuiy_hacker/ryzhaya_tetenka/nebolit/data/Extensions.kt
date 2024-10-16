@@ -11,12 +11,28 @@ fun Date.toLocalDate(): LocalDate {
     )
 }
 
+fun Date.dateToString(): String {
+    return SimpleDateFormat("dd.MM.yyyy").format(this)
+}
+
+fun Date.dateToLocalDateString(): String {
+    return SimpleDateFormat("yyyy-MM-dd").format(this)
+}
+
 fun LocalDate?.toString(): String {
     return "${this?.year}-${if (this?.monthNumber?.toString()?.length == 1) "0${monthNumber}" else this?.monthNumber}-${if (this?.dayOfMonth?.toString()?.length == 1) "0${dayOfMonth}" else this?.dayOfMonth}"
 }
 
 fun String.toLocalDate(): LocalDate {
     return SimpleDateFormat("yyyy-MM-dd").parse(this)?.toLocalDate() ?: Date().toLocalDate()
+}
+
+fun String.toDateOfBackendFormat(): Date {
+    return SimpleDateFormat("yyyy-MM-dd").parse(this)
+}
+
+fun String.toDateOfMobileFormat(): Date {
+    return SimpleDateFormat("dd.MM.yyyy").parse(this)
 }
 
 fun LocalDate?.toPassportDate(): String {

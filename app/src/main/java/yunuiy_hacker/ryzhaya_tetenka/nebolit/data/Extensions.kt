@@ -1,9 +1,25 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.data
 
+import android.os.Build
+import android.os.Bundle
+import android.util.Patterns
 import kotlinx.datetime.LocalDate
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.regex.Pattern
 
+fun String.isEmail(): Boolean {
+    return Pattern.compile(
+        "[a-z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-z0-9][a-z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-z0-9][a-z0-9\\-]{0,25}" +
+                ")+"
+    ).matcher(this).matches()
+}
 
 fun Date.toLocalDate(): LocalDate {
     return LocalDate.fromEpochDays(

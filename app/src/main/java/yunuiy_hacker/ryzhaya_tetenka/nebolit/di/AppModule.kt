@@ -13,6 +13,9 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefsHelper
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllPatientsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemovePatientUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminPatientUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.CheckRegistrationByEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.DefineRole
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.GetPassportById
@@ -120,4 +123,19 @@ object AppModule {
     ): UpdatePatientDataUseCase = UpdatePatientDataUseCase(
         supabaseClient = supabaseClient, sharedPrefsHelper = sharedPrefsHelper
     )
+
+    @Singleton
+    @Provides
+    fun provideGetAllPatientsUseCase(supabaseClient: SupabaseClient): GetAllPatientsUseCase =
+        GetAllPatientsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideRemovePatientUseCase(supabaseClient: SupabaseClient): RemovePatientUseCase =
+        RemovePatientUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideUpdateAdminPatientUseCase(supabaseClient: SupabaseClient): UpdateAdminPatientUseCase =
+        UpdateAdminPatientUseCase(supabaseClient)
 }

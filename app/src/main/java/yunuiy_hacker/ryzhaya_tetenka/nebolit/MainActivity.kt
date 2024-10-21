@@ -53,10 +53,13 @@ class MainActivity : ComponentActivity() {
 
             val theme = dataStoreHelper.getTheme().collectAsState(initial = false)
 
+            val user = saveReadPersonDataUseCase.readUser.invoke()
             NebolitTheme(darkTheme = theme.value) {
                 NavGraph(
                     navController = navController,
-                    startDestination = if (saveReadPersonDataUseCase.readUser.invoke() == null) if (dataStoreHelper.getAppEntry().collectAsState(initial = false).value) Route.SignInScreen.route else Route.OnboardingScreen.route else Route.HomeScreen.route
+                    startDestination = if (user == null) if (dataStoreHelper.getAppEntry()
+                            .collectAsState(initial = false).value
+                    ) Route.SignInScreen.route else Route.OnboardingScreen.route else if (user.passportId != 0) Route.HomeScreen.route else Route.AdminMainScreen.route
                 )
             }
         }

@@ -12,6 +12,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.gson.Gson
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.main.AdminMainScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_add.AdminPatientsAddScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_edit.AdminPatientEditScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_edit.AdminPatientsEditViewModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_list.AdminPatientsListScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.FillPersonDataScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.FillPersonDataViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_in.SignInScreen
@@ -24,6 +31,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.onboarding.OnboardingS
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(navController: NavHostController, startDestination: String) {
+    val gson: Gson = Gson()
 
     AnimatedNavHost(navController = navController,
         startDestination = startDestination,
@@ -90,6 +98,44 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 
         composable(route = Route.EditPersonDataScreen.route) {
             EditPersonDataScreen(navController = navController)
+        }
+
+        //admin
+        composable(route = Route.AdminMainScreen.route) {
+            AdminMainScreen(navController = navController)
+        }
+
+        composable(route = Route.AdminPatientsListScreen.route) {
+            AdminPatientsListScreen(navController = navController)
+        }
+
+        composable(
+            route = Route.AdminPatientsEditScreen.route + "/{admin_patient}",
+            arguments = listOf(navArgument("admin_patient") {
+                type = NavType.StringType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: AdminPatientsEditViewModel = hiltViewModel()
+            val adminPatient = gson.fromJson(
+                entry.arguments?.getString("admin_patient")!!,
+                AdminPatient::class.java
+            )
+            viewModel.state.adminPatient =
+                adminPatient
+            AdminPatientEditScreen(
+                navController = navController,
+                viewModel = viewModel,
+                adminPatient
+            )
+        }
+
+        composable(route = Route.AdminPatientsAddScreen.route) {
+            AdminPatientsAddScreen(navController = navController)
+        }
+
+        composable(route = Route.AdminDoctorsListScreen.route) {
+
         }
     }
 }

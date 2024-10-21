@@ -18,5 +18,6 @@ data class Patient(
     val policy: String? = null,
     val height: Int? = null,
     val weight: Float? = null,
-    val user: User? = null
+    @SerialName("users")
+    var user: User? = null
 ) : RoleObject()

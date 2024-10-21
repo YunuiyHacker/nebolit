@@ -37,12 +37,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
@@ -154,18 +152,15 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
 
         if (viewModel.state.showDialog)
             ContentDialog(
-                text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
+                text = if (viewModel.state.contentState.data.value == null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
                 onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialogEvent) })
 
         if (viewModel.state.success) {
             navController.currentBackStackEntry?.savedStateHandle?.set("user", viewModel.state.user)
-            navController.navigate(Route.HomeScreen.route)
+            if (viewModel.state.isAdmin)
+                navController.navigate(Route.AdminMainScreen.route)
+            else
+                navController.navigate(Route.HomeScreen.route)
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun SignInScreenPreview() {
-    SignInScreen(navController = rememberNavController())
 }

@@ -64,60 +64,62 @@ class SignInViewModel @Inject constructor(
         var user: User?
 
         GlobalScope.launch {
-            try {
-                runBlocking {
+            runBlocking {
+                try {
                     user = signInUseCase.logIn.invoke(
                         signInModel = SignInModel(
                             email = state.email, password = state.password
                         )
                     )
                     if (user == null) {
-                        state.contentState.exception.value
                         throw Exception(
                             "Пользователя с такими данными не существует"
                         )
-                        state.showDialog = true
                     } else {
-                        val passport = signInUseCase.getPassportById.invoke(user!!.passportId!!)
-                        if (passport == null) {
-                            state.contentState.exception.value
-                            throw Exception(
-                                "К сожалению, мы не нашли в базе ваш паспорт, а без него войти нельзя"
-                            )
-                            state.showDialog = true
-                        } else {
-                            saveReadPersonDataUseCase.savePassport.invoke(passport!!)
-                            saveReadPersonDataUseCase.saveUser.invoke(user!!)
-
-                            val role: Role = signInUseCase.defineRole.invoke(user_id = user!!.id!!)
-
-                            val roleObject: RoleObject? = signInUseCase.loadRoleObject.invoke(
-                                loadRoleObjectModel = LoadRoleObjectModel(
-                                    user_id = user!!.id!!,
-                                    role = role
+                        if (user?.passportId != null) {
+                            val passport = signInUseCase.getPassportById.invoke(user!!.passportId!!)
+                            if (passport == null) {
+                                throw Exception(
+                                    "К сожалению, мы не нашли в базе ваш паспорт, а без него войти нельзя"
                                 )
-                            )
+                            } else {
+                                saveReadPersonDataUseCase.savePassport.invoke(passport!!)
+                                saveReadPersonDataUseCase.saveUser.invoke(user!!)
 
-                            if (roleObject is Patient)
-                                saveReadPersonDataUseCase.savePatient(roleObject as Patient)
-                            else if (roleObject is Doctor) {
-                                val specialization =
-                                    signInUseCase.getSpecializationById.invoke(roleObject.specializationId!!)
-                                if (specialization != null) {
-                                    roleObject.specialization = specialization
-                                    saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+                                val role: Role =
+                                    signInUseCase.defineRole.invoke(user_id = user!!.id!!)
+
+                                val roleObject: RoleObject? = signInUseCase.loadRoleObject.invoke(
+                                    loadRoleObjectModel = LoadRoleObjectModel(
+                                        user_id = user!!.id!!,
+                                        role = role
+                                    )
+                                )
+
+                                if (roleObject is Patient)
+                                    saveReadPersonDataUseCase.savePatient(roleObject as Patient)
+                                else if (roleObject is Doctor) {
+                                    val specialization =
+                                        signInUseCase.getSpecializationById.invoke(roleObject.specializationId!!)
+                                    if (specialization != null) {
+                                        roleObject.specialization = specialization
+                                        saveReadPersonDataUseCase.saveDoctor(roleObject as Doctor)
+                                    }
                                 }
                             }
-
-                            state.success = true
+                        } else {
+                            state.isAdmin = true
+                            saveReadPersonDataUseCase.saveUser(user!!)
                         }
+
+                        state.success = true
                     }
                     state.contentState.isLoading.value = false
+                } catch (e: Exception) {
+                    state.contentState.exception.value = e
+                    state.contentState.isLoading.value = false
+                    state.showDialog = true
                 }
-            } catch (e: Exception) {
-                state.contentState.exception.value = e
-                state.contentState.isLoading.value = false
-                state.showDialog = true
             }
         }
     }

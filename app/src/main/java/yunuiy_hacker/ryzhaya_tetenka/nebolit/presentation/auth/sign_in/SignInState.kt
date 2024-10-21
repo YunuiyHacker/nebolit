@@ -20,4 +20,5 @@ class SignInState {
     var success by mutableStateOf(false)
 
     var user by mutableStateOf(User())
+    var isAdmin by mutableStateOf(false)
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignUpModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
@@ -62,10 +63,12 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun validate() {
-        if (state.password.length >= 8) if (state.password == state.confirmPassword) if (state.policyChecked) {
-            state.valid = true
-        } else state.valid = false
-        else state.valid = false
+        if (state.email.isEmail())
+            if (state.password.length >= 8) if (state.password == state.confirmPassword) if (state.policyChecked) {
+                state.valid = true
+            } else state.valid = false
+            else state.valid = false
+            else state.valid = false
         else state.valid = false
     }
 

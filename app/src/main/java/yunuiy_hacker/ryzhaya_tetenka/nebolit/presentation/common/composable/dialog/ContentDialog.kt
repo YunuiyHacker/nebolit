@@ -1,6 +1,7 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -19,10 +20,10 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.DIALOG_CORNER_RADIUS
 
 @Composable
-fun ContentDialog(text: String, onDismissRequest: () -> Unit) {
+fun ContentDialog(modifier: Modifier = Modifier, text: String, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .clip(RoundedCornerShape(DIALOG_CORNER_RADIUS))
                 .background(
                     color = if (isSystemInDarkTheme()) Color(0xFF131313) else Color(

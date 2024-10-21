@@ -13,5 +13,6 @@ data class User(
     val password: String? = null,
     @SerialName("passport_id")
     val passportId: Int? = 0,
+    @SerialName("passports")
     var passport: Passport? = null
 ) : Parcelable

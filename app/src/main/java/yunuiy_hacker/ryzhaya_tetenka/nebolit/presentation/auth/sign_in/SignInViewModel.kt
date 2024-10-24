@@ -13,6 +13,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Doctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.Patient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.parent.RoleObject
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.LoadRoleObjectModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignInModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
+    val dataStoreHelper: DataStoreHelper,
     private val signInUseCase: SignInUseCase,
     private val saveReadPersonDataUseCase: SaveReadPersonDataUseCase
 ) : ViewModel() {

@@ -20,13 +20,18 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.DIALOG_CORNER_RADIUS
 
 @Composable
-fun ContentDialog(modifier: Modifier = Modifier, text: String, onDismissRequest: () -> Unit) {
+fun ContentDialog(
+    modifier: Modifier = Modifier,
+    text: String,
+    onDismissRequest: () -> Unit,
+    isDarkTheme: Boolean = true
+) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
             modifier = modifier
                 .clip(RoundedCornerShape(DIALOG_CORNER_RADIUS))
                 .background(
-                    color = if (isSystemInDarkTheme()) Color(0xFF131313) else Color(
+                    color = if (isDarkTheme) Color(0xFF131313) else Color(
                         0xFFFFFFFF
                     )
                 )

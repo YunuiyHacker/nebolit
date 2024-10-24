@@ -61,6 +61,8 @@ import java.util.Date
 fun FillPersonDataScreen(
     viewModel: FillPersonDataViewModel = hiltViewModel(), navController: NavHostController
 ) {
+    val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
     val dateOfBirthInteractionSource = remember {
         MutableInteractionSource()
     }
@@ -90,9 +92,7 @@ fun FillPersonDataScreen(
                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                 }
             }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = if (viewModel.dataStoreHelper.getTheme()
-                        .collectAsState(initial = false).value
-                ) Color(
+                containerColor = if (isDarkTheme) Color(
                     0xFF131313
                 ) else Color(0xFFF9F9F9)
             )
@@ -118,7 +118,8 @@ fun FillPersonDataScreen(
                     fontSize = 17.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.surname,
                     onValueChange = {
                         viewModel.onEvent(FillPersonDataEvent.ChangeSurnameEvent(it.take(100)))
@@ -132,7 +133,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.name,
                     onValueChange = {
                         viewModel.onEvent(FillPersonDataEvent.ChangeNameEvent(it.take(100)))
@@ -146,7 +148,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.lastname,
                     onValueChange = {
                         viewModel.onEvent(FillPersonDataEvent.ChangeLastnameEvent(it.take(100)))
@@ -194,7 +197,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.series,
                     onValueChange = {
                         if (it.isNumeric()) viewModel.onEvent(
@@ -214,7 +218,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.code,
                     onValueChange = {
                         if (it.isNumeric()) viewModel.onEvent(
@@ -361,7 +366,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.liveAddress,
                     onValueChange = {
                         viewModel.onEvent(FillPersonDataEvent.ChangeLiveAddressEvent(it.take(300)))
@@ -375,7 +381,8 @@ fun FillPersonDataScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = state.policy,
                     onValueChange = {
                         if (it.isNumeric()) viewModel.onEvent(
@@ -484,12 +491,16 @@ fun FillPersonDataScreen(
                     }
                 }
 
-                if (state.contentState.isLoading.value) LoadingDialog(onDismissRequest = {})
+                if (state.contentState.isLoading.value) LoadingDialog(
+                    onDismissRequest = {},
+                    isDarkTheme = isDarkTheme
+                )
 
                 if (state.showDialog) ContentDialog(text = if (state.contentState.exception.value != null) state.contentState.exception.value?.message.toString() else state.contentState.data.value.toString(),
                     onDismissRequest = {
                         viewModel.onEvent(FillPersonDataEvent.HideDialogEvent)
-                    })
+                    }, isDarkTheme = isDarkTheme
+                )
 
                 if (state.success) {
                     navController.navigate(Route.HomeScreen.route)

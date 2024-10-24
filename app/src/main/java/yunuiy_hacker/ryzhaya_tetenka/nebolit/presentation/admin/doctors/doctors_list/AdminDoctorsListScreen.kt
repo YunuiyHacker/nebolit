@@ -1,4 +1,4 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_list
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.sexToString
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.Table
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
@@ -41,8 +41,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
 @Composable
-fun AdminPatientsListScreen(
-    navController: NavHostController, viewModel: AdminPatientsListViewModel = hiltViewModel()
+fun AdminDoctorsListScreen(
+    navController: NavHostController, viewModel: AdminDoctorsListViewModel = hiltViewModel()
 ) {
     val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
 
@@ -53,7 +53,7 @@ fun AdminPatientsListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .offset(x = -24.dp),
-                    text = "Список пациентов",
+                    text = "Список врачей",
                     fontSize = 18.sp,
                     textAlign = TextAlign.Center
                 )
@@ -88,8 +88,6 @@ fun AdminPatientsListScreen(
                     11 -> 150.dp
                     12 -> 450.dp
                     13 -> 450.dp
-                    16 -> 100.dp
-                    17 -> 100.dp
                     else -> 250.dp
                 }
             }
@@ -107,12 +105,8 @@ fun AdminPatientsListScreen(
                     9 -> "Дата выдачи"
                     10 -> "Паспорт выдан"
                     11 -> "Код подразделения"
-                    12 -> "Адрес регистрации"
-                    13 -> "Фактический адрес"
-                    14 -> "Страховая компания"
-                    15 -> "Полис"
-                    16 -> "Рост"
-                    17 -> "Вес"
+                    12 -> "Специализация"
+                    13 -> "Код лицензии"
                     else -> ""
                 }
 
@@ -126,7 +120,7 @@ fun AdminPatientsListScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            val cellText: @Composable (Int, AdminPatient) -> Unit = { index, item ->
+            val cellText: @Composable (Int, AdminDoctor) -> Unit = { index, item ->
                 val value = when (index) {
                     0 -> item.surname
                     1 -> item.name
@@ -140,12 +134,8 @@ fun AdminPatientsListScreen(
                     9 -> item.issueDate
                     10 -> item.issueOrganization
                     11 -> item.departmentCode
-                    12 -> item.registrationAddress
-                    13 -> item.liveAddress
-                    14 -> item.insuranceCompany
-                    15 -> item.policy
-                    16 -> item.height.toString()
-                    17 -> item.weight.toString()
+                    12 -> item.specializationTitle
+                    13 -> item.licenzeNumber
                     else -> ""
                 }
 
@@ -161,27 +151,27 @@ fun AdminPatientsListScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Table(modifier = Modifier.clip(RoundedCornerShape(20.dp)),
-                columnCount = 17,
+                columnCount = 14,
                 cellWidth = cellWidth,
-                data = viewModel.state.patients,
+                data = viewModel.state.doctors,
                 headerCellContent = headerCellTitle,
                 cellContent = cellText,
                 color = MaterialTheme.colorScheme.primary,
-                selectedIndex = viewModel.state.tableSelectedPatientIndex,
+                selectedIndex = viewModel.state.tableSelectedDoctorIndex,
                 onChangeSelectedIndex = {
-                    viewModel.onEvent(AdminPatientsListEvent.ChangeSelectedPatientIndexEvent(it))
+                    viewModel.onEvent(AdminDoctorsListEvent.ChangeSelectedDoctorIndexEvent(it))
                 })
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    if (viewModel.state.tableSelectedPatientIndex == -2) {
-                        viewModel.state.contentState.data.value = "Выберите пациента"
+                    if (viewModel.state.tableSelectedDoctorIndex == -2) {
+                        viewModel.state.contentState.data.value = "Выберите врача"
                         viewModel.state.showDialog = true
                     } else {
                         navController.navigate(
-                            Route.AdminPatientsEditScreen.withAdminPatientArgument(
-                                viewModel.state.patients[viewModel.state.tableSelectedPatientIndex]
+                            Route.AdminDoctorsEditScreen.withAdminDoctorArgument(
+                                viewModel.state.doctors[viewModel.state.tableSelectedDoctorIndex]
                             )
                         )
                     }
@@ -195,7 +185,7 @@ fun AdminPatientsListScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    viewModel.onEvent(AdminPatientsListEvent.DeletePatientEvent)
+                    viewModel.onEvent(AdminDoctorsListEvent.DeleteDoctorEvent)
                 },
                 shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
                 colors = ButtonDefaults.buttonColors(contentColor = Color.White)
@@ -206,12 +196,12 @@ fun AdminPatientsListScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    navController.navigate(Route.AdminPatientsAddScreen.route)
+                    navController.navigate(Route.AdminDoctorsAddScreen.route)
                 },
                 shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
                 colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
-                Text(text = "Добавить нового пациента")
+                Text(text = "Добавить нового врача")
             }
         }
     }
@@ -220,8 +210,9 @@ fun AdminPatientsListScreen(
         LoadingDialog(onDismissRequest = {}, isDarkTheme = isDarkTheme)
     }
 
-    if (viewModel.state.showDialog) ContentDialog(text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
-        onDismissRequest = { viewModel.onEvent(AdminPatientsListEvent.HideDialogEvent) },
+    if (viewModel.state.showDialog) ContentDialog(
+        text = if (viewModel.state.contentState.data == null) viewModel.state.contentState.exception.value.toString() else viewModel.state.contentState.data.value.toString(),
+        onDismissRequest = { viewModel.onEvent(AdminDoctorsListEvent.HideDialogEvent) },
         isDarkTheme = isDarkTheme
     )
 

@@ -13,7 +13,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.gson.Gson
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_add.AdminDoctorsAddScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_edit.AdminDoctorsEditScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_edit.AdminDoctorsEditViewModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_list.AdminDoctorsListScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.main.AdminMainScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_add.AdminPatientsAddScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_edit.AdminPatientEditScreen
@@ -135,7 +140,32 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         }
 
         composable(route = Route.AdminDoctorsListScreen.route) {
+            AdminDoctorsListScreen(navController = navController)
+        }
 
+        composable(
+            route = Route.AdminDoctorsEditScreen.route + "/{admin_doctor}",
+            arguments = listOf(navArgument("admin_doctor") {
+                type = NavType.StringType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: AdminDoctorsEditViewModel = hiltViewModel()
+            val adminDoctor = gson.fromJson(
+                entry.arguments?.getString("admin_doctor")!!,
+                AdminDoctor::class.java
+            )
+            viewModel.state.adminDoctor =
+                adminDoctor
+            AdminDoctorsEditScreen(
+                navController = navController,
+                viewModel = viewModel,
+                adminDoctor
+            )
+        }
+
+        composable(route = Route.AdminDoctorsAddScreen.route) {
+            AdminDoctorsAddScreen(navController = navController)
         }
     }
 }

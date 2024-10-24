@@ -1,6 +1,8 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_add
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_add
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
@@ -21,6 +23,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,10 +35,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,24 +57,30 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isDepartmentCode
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isNumeric
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
-fun AdminPatientsAddScreen(
+fun AdminDoctorsAddScreen(
     navController: NavHostController,
-    viewModel: AdminPatientsAddViewModel = hiltViewModel()
+    viewModel: AdminDoctorsAddViewModel = hiltViewModel()
 ) {
     val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(AdminDoctorsAddEvent.GetAllSpecializations)
+    }
 
     val dateOfBirthInteractionSource = remember {
         MutableInteractionSource()
     }
     val issueDateInteractionSource = remember {
         MutableInteractionSource()
+    }
+    var dropdownMenuExpanded by remember {
+        mutableStateOf(false)
     }
 
     viewModel.state.let { state ->
@@ -76,7 +91,7 @@ fun AdminPatientsAddScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .offset(x = -24.dp),
-                        text = "Добавление нового пациента",
+                        text = "Добавление нового врача",
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center
                     )
@@ -102,7 +117,7 @@ fun AdminPatientsAddScreen(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
-                    text = "Чтобы добавить пациента, Вам необходимо заполнить следующие данные",
+                    text = "Чтобы добавить врача, Вам необходимо заполнить следующие данные",
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 14.sp
                 )
@@ -118,7 +133,7 @@ fun AdminPatientsAddScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.email,
                     onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangeEmailEvent(it.take(100)))
+                        viewModel.onEvent(AdminDoctorsAddEvent.ChangeEmailEvent(it.take(100)))
                     },
                     label = {
                         Text(text = "E-mail")
@@ -133,7 +148,7 @@ fun AdminPatientsAddScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.password,
                     onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangePasswordEvent(it.take(100)))
+                        viewModel.onEvent(AdminDoctorsAddEvent.ChangePasswordEvent(it.take(100)))
                     },
                     label = {
                         Text(text = "Пароль")
@@ -155,7 +170,7 @@ fun AdminPatientsAddScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.surname,
                     onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangeSurnameEvent(it.take(100)))
+                        viewModel.onEvent(AdminDoctorsAddEvent.ChangeSurnameEvent(it.take(100)))
                     },
                     label = {
                         Text(text = "Фамилия")
@@ -170,7 +185,7 @@ fun AdminPatientsAddScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.name,
                     onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangeNameEvent(it.take(100)))
+                        viewModel.onEvent(AdminDoctorsAddEvent.ChangeNameEvent(it.take(100)))
                     },
                     label = {
                         Text(text = "Имя")
@@ -185,7 +200,7 @@ fun AdminPatientsAddScreen(
                     modifier = Modifier.fillMaxWidth(),
                     value = state.lastname,
                     onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangeLastnameEvent(it.take(100)))
+                        viewModel.onEvent(AdminDoctorsAddEvent.ChangeLastnameEvent(it.take(100)))
                     },
                     label = {
                         Text(text = "Отчество")
@@ -220,7 +235,7 @@ fun AdminPatientsAddScreen(
                     value = state.addressOfBirth,
                     onValueChange = {
                         viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeAddressOfBirthEvent(
+                            AdminDoctorsAddEvent.ChangeAddressOfBirthEvent(
                                 it.take(
                                     300
                                 )
@@ -241,7 +256,7 @@ fun AdminPatientsAddScreen(
                     value = state.series,
                     onValueChange = {
                         if (it.isNumeric()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeSeriesEvent(
+                            AdminDoctorsAddEvent.ChangeSeriesEvent(
                                 it.take(
                                     4
                                 )
@@ -262,7 +277,7 @@ fun AdminPatientsAddScreen(
                     value = state.code,
                     onValueChange = {
                         if (it.isNumeric()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeCodeEvent(
+                            AdminDoctorsAddEvent.ChangeCodeEvent(
                                 it.take(
                                     6
                                 )
@@ -291,7 +306,7 @@ fun AdminPatientsAddScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                     Row {
                         OutlinedButton(
-                            onClick = { viewModel.onEvent(AdminPatientsAddEvent.ChangeSexEvent(true)) },
+                            onClick = { viewModel.onEvent(AdminDoctorsAddEvent.ChangeSexEvent(true)) },
                             shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = if (state.sex) Primary else Color.Transparent,
@@ -303,7 +318,7 @@ fun AdminPatientsAddScreen(
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         OutlinedButton(
-                            onClick = { viewModel.onEvent(AdminPatientsAddEvent.ChangeSexEvent(false)) },
+                            onClick = { viewModel.onEvent(AdminDoctorsAddEvent.ChangeSexEvent(false)) },
                             shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 containerColor = if (!state.sex) Primary else Color.Transparent,
@@ -340,7 +355,7 @@ fun AdminPatientsAddScreen(
                     value = state.issueOrganization,
                     onValueChange = {
                         viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeIssueOrganizationEvent(
+                            AdminDoctorsAddEvent.ChangeIssueOrganizationEvent(
                                 it.take(
                                     100
                                 )
@@ -361,7 +376,7 @@ fun AdminPatientsAddScreen(
                     value = state.departmentCode,
                     onValueChange = {
                         if (it.isNumeric() || it.contains("-")) if (it.isDepartmentCode()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeDepartmentCodeEvent(
+                            AdminDoctorsAddEvent.ChangeDepartmentCodeEvent(
                                 it.take(
                                     7
                                 )
@@ -384,145 +399,92 @@ fun AdminPatientsAddScreen(
                     fontSize = 17.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "Специальность", color = MaterialTheme.colorScheme.onSurface)
+                Spacer(modifier = Modifier.height(12.dp))
+//                throw Exception(state.specializationIndex.toString())
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(BUTTON_CORNER_RADIUS))
+                        .background(if (state.specializationIndex == -2) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primary)
+                        .clickable {
+                            dropdownMenuExpanded = !dropdownMenuExpanded
+                        },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = if (state.specializationIndex == -2) "Выберите специальность" else state.specializations[state.specializationIndex].title.toString(),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                DropdownMenu(
+                    modifier = Modifier,
+                    expanded = dropdownMenuExpanded,
+                    onDismissRequest = { dropdownMenuExpanded = false }) {
+                    state.specializations.forEachIndexed { index, specialization ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = state.specializations[index].title.toString(),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            },
+                            onClick = {
+                                viewModel.onEvent(
+                                    AdminDoctorsAddEvent.ChangeSpecializationIndexEvent(
+                                        index
+                                    )
+                                )
+                                dropdownMenuExpanded = false
+                            })
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = state.registrationAddress,
+                    value = state.licenzeNumber,
                     onValueChange = {
                         viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeRegistrationAddressEvent(
+                            AdminDoctorsAddEvent.ChangeLicenzeNumberEvent(
                                 it.take(
-                                    300
+                                    15
                                 )
                             )
                         )
                     },
                     label = {
-                        Text(text = "Адрес регистрации")
+                        Text(text = "Номер лицензии")
                     },
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.liveAddress,
-                    onValueChange = {
-                        viewModel.onEvent(AdminPatientsAddEvent.ChangeLiveAddressEvent(it.take(300)))
-                    },
-                    label = {
-                        Text(text = "Фактический адрес")
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.policy,
-                    onValueChange = {
-                        if (it.isNumeric()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangePolicyEvent(
-                                it.take(
-                                    16
-                                )
-                            )
-                        )
-                    },
-                    label = {
-                        Text(text = "Полис")
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.insuranceCompany,
-                    onValueChange = {
-                        viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeInsuranceCompanyEvent(
-                                it.take(
-                                    300
-                                )
-                            )
-                        )
-                    },
-                    label = {
-                        Text(text = "Страховая компания")
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.height.toString(),
-                    onValueChange = {
-                        if (it.isNumeric()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeHeightEvent(
-                                it.toInt()
-                            )
-                        )
-                    },
-                    label = {
-                        Text(text = "Рост")
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                    )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.weight.toString(),
-                    onValueChange = {
-                        if (it.isNumeric()) viewModel.onEvent(
-                            AdminPatientsAddEvent.ChangeWeightEvent(
-                                it.toFloat()
-                            )
-                        )
-                    },
-                    label = {
-                        Text(text = "Вес")
-                    },
-                    maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                     )
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        viewModel.onEvent(AdminPatientsAddEvent.OnClickButtonEvent)
+                        viewModel.onEvent(AdminDoctorsAddEvent.OnClickButtonEvent)
                     },
                     shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
                     colors = ButtonDefaults.buttonColors(contentColor = Color.White),
                     enabled = state.valid
                 ) {
-                    Text(text = "Зарегистрировать пациента")
+                    Text(text = "Зарегистрировать врача")
                 }
                 Spacer(modifier = Modifier.height(24.dp))
 
                 if (dateOfBirthInteractionSource.collectIsPressedAsState().value) viewModel.onEvent(
-                    AdminPatientsAddEvent.ShowDateOfBirthPickerDialogEvent
+                    AdminDoctorsAddEvent.ShowDateOfBirthPickerDialogEvent
                 )
                 if (issueDateInteractionSource.collectIsPressedAsState().value) viewModel.onEvent(
-                    AdminPatientsAddEvent.ShowIssueDatePickerDialogEvent
+                    AdminDoctorsAddEvent.ShowIssueDatePickerDialogEvent
                 )
 
                 if (state.nowSelectableIssueDate || state.nowSelectableDateOfBirth) {
                     DatePickerDialog(onDismissRequest = { }, confirmButton = {
-                        Button(onClick = { viewModel.onEvent(AdminPatientsAddEvent.HideDatePickerDialogEvent) }) {
+                        Button(onClick = { viewModel.onEvent(AdminDoctorsAddEvent.HideDatePickerDialogEvent) }) {
                             Text(text = "Подтвердить", color = Color.White)
                         }
                     }) {
@@ -538,7 +500,7 @@ fun AdminPatientsAddScreen(
                 if (state.showDialog) ContentDialog(
                     text = if (state.contentState.exception.value != null) state.contentState.exception.value?.message.toString() else state.contentState.data.value.toString(),
                     onDismissRequest = {
-                        viewModel.onEvent(AdminPatientsAddEvent.HideDialogEvent)
+                        viewModel.onEvent(AdminDoctorsAddEvent.HideDialogEvent)
                     }, isDarkTheme = isDarkTheme
                 )
 

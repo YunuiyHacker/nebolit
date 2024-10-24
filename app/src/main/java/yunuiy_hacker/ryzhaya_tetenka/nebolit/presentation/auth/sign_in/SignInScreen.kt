@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +50,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
 @Composable
 fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = hiltViewModel()) {
+    val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
     Scaffold(Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.onBackground,
         bottomBar = {
@@ -88,8 +91,7 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = viewModel.state.email,
                 onValueChange = {
                     viewModel.onEvent(SignInEvent.ChangeEmailEvent(it.take(50)))
@@ -147,20 +149,19 @@ fun SignInScreen(navController: NavHostController, viewModel: SignInViewModel = 
         }
 
         if (viewModel.state.contentState.isLoading.value) {
-            LoadingDialog(onDismissRequest = {})
+            LoadingDialog(onDismissRequest = {}, isDarkTheme = isDarkTheme)
         }
 
-        if (viewModel.state.showDialog)
-            ContentDialog(
-                text = if (viewModel.state.contentState.data.value == null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
-                onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialogEvent) })
+        if (viewModel.state.showDialog) ContentDialog(
+            text = if (viewModel.state.contentState.data.value == null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
+            onDismissRequest = { viewModel.onEvent(SignInEvent.HideDialogEvent) },
+            isDarkTheme = isDarkTheme
+        )
 
         if (viewModel.state.success) {
             navController.currentBackStackEntry?.savedStateHandle?.set("user", viewModel.state.user)
-            if (viewModel.state.isAdmin)
-                navController.navigate(Route.AdminMainScreen.route)
-            else
-                navController.navigate(Route.HomeScreen.route)
+            if (viewModel.state.isAdmin) navController.navigate(Route.AdminMainScreen.route)
+            else navController.navigate(Route.HomeScreen.route)
         }
     }
 }

@@ -15,13 +15,13 @@ import androidx.compose.ui.window.Dialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 
 @Composable
-fun LoadingDialog(onDismissRequest: () -> Unit) {
+fun LoadingDialog(onDismissRequest: () -> Unit, isDarkTheme: Boolean = false) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(BUTTON_CORNER_RADIUS))
                 .background(
-                    color = if (isSystemInDarkTheme()) Color(0xFF131313) else Color(
+                    color = if (isDarkTheme) Color(0xFF131313) else Color(
                         0xFFFFFFFF
                     )
                 )

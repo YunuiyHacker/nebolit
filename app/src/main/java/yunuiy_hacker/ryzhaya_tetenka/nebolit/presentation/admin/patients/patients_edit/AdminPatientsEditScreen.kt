@@ -60,6 +60,8 @@ fun AdminPatientEditScreen(
     viewModel: AdminPatientsEditViewModel,
     adminPatient: AdminPatient
 ) {
+    val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
     val dateOfBirthInteractionSource = remember {
         MutableInteractionSource()
     }
@@ -108,9 +110,7 @@ fun AdminPatientEditScreen(
                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                 }
             }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = if (viewModel.dataStoreHelper.getTheme()
-                        .collectAsState(initial = false).value
-                ) Color(
+                containerColor = if (isDarkTheme) Color(
                     0xFF131313
                 ) else Color(0xFFF9F9F9)
             )
@@ -719,12 +719,16 @@ fun AdminPatientEditScreen(
                     }
                 }
 
-                if (state.contentState.isLoading.value) LoadingDialog(onDismissRequest = {})
+                if (state.contentState.isLoading.value) LoadingDialog(
+                    onDismissRequest = {},
+                    isDarkTheme = isDarkTheme
+                )
 
                 if (state.showDialog) ContentDialog(text = if (state.contentState.exception.value != null) state.contentState.exception.value?.message.toString() else state.contentState.data.value.toString(),
                     onDismissRequest = {
                         viewModel.onEvent(AdminPatientsEditEvent.HideDialogEvent)
-                    })
+                    }, isDarkTheme = isDarkTheme
+                )
 
                 if (state.success) {
                     navController.popBackStack()

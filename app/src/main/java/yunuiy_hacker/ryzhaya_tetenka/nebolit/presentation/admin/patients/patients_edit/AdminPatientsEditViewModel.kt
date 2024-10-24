@@ -7,11 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.dateToLocalDateString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.dateToString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toDateOfMobileFormat
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminPatientUseCase
 import java.util.Date
@@ -132,7 +130,7 @@ class AdminPatientsEditViewModel @Inject constructor(
         }
     }
 
-    fun validate() {
+    private fun validate() {
         if (state.email.isEmail()) {
             state.emailValid = true
             if (state.password.length >= 8) {

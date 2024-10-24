@@ -13,6 +13,8 @@ data class Doctor(
     val specializationId: Int? = 0,
     @SerialName("licenze_number")
     val licenzeNumber: String? = "",
+    @SerialName("users")
     val user: User? = null,
+    @SerialName("specializations")
     var specialization: Specialization? = null
 ) : RoleObject()

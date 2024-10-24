@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.User
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.isEmail
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.SignUpModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
+    val dataStoreHelper: DataStoreHelper,
     private val signUpUseCase: SignUpUseCase,
     private val saveReadPersonDataUseCase: SaveReadPersonDataUseCase
 ) : ViewModel() {

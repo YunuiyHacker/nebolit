@@ -86,6 +86,17 @@ fun AdminMainScreen(
                         ) {
                             Text(text = "Список пациентов")
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                navController.navigate(Route.AdminDoctorsListScreen.route)
+                            },
+                            shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
+                            colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+                        ) {
+                            Text(text = "Список врачей")
+                        }
                     }
                 }
             }

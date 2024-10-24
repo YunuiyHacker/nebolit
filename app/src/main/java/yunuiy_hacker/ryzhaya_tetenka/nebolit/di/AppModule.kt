@@ -13,8 +13,13 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefsHelper
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllDoctorsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllPatientsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllSpecializationsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RegistrationDoctorUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemovePatientUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminDoctorUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminPatientUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.CheckRegistrationByEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.DefineRole
@@ -138,4 +143,29 @@ object AppModule {
     @Provides
     fun provideUpdateAdminPatientUseCase(supabaseClient: SupabaseClient): UpdateAdminPatientUseCase =
         UpdateAdminPatientUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetAllDoctorsUseCase(supabaseClient: SupabaseClient): GetAllDoctorsUseCase =
+        GetAllDoctorsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideRemoveDoctorUseCase(supabaseClient: SupabaseClient): RemoveDoctorUseCase =
+        RemoveDoctorUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideUpdateAdminDoctorUseCase(supabaseClient: SupabaseClient): UpdateAdminDoctorUseCase =
+        UpdateAdminDoctorUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideRegistrationDoctorUseCase(supabaseClient: SupabaseClient): RegistrationDoctorUseCase =
+        RegistrationDoctorUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetAllSpecializationsUseCase(supabaseClient: SupabaseClient): GetAllSpecializationsUseCase =
+        GetAllSpecializationsUseCase(supabaseClient)
 }

@@ -40,6 +40,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,6 +83,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 fun SignUpScreen(
     navController: NavHostController, viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
     var bottomSheetScaffoldHeight by remember {
         mutableStateOf(0)
     }
@@ -233,21 +236,16 @@ fun SignUpScreen(
         }
 
         if (viewModel.state.showPolicy) {
-            ModalBottomSheet(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ModalBottomSheet(containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 onDismissRequest = { viewModel.onEvent(SignUpEvent.HidePolicyEvent) }) {
-                Column(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(16.dp)
-                        .onGloballyPositioned {
-                            bottomSheetScaffoldHeight = it.size.height
-                        }
-                ) {
+                Column(modifier = Modifier
+                    .wrapContentSize()
+                    .padding(16.dp)
+                    .onGloballyPositioned {
+                        bottomSheetScaffoldHeight = it.size.height
+                    }) {
                     Text(
-                        text = "Настоящий документ \"Политика конфиденциальности\" устанавливает, что разработчик и обладатель данного приложения Нуркаев Альфир Харисович не несет никакой ответственности в случае утечки персональных данных пользователей и полностью отказывается от компенсирования в любом его виде. " +
-                                "\n\n" +
-                                "Документ подписан и утвержден генеральным директором ООО \"Рыжая тетенька\" Нуркаевым Альфиром Харисовичем 11.10.2024",
+                        text = "Настоящий документ \"Политика конфиденциальности\" устанавливает, что разработчик и обладатель данного приложения Нуркаев Альфир Харисович не несет никакой ответственности в случае утечки персональных данных пользователей и полностью отказывается от компенсирования в любом его виде. " + "\n\n" + "Документ подписан и утвержден генеральным директором ООО \"Рыжая тетенька\" Нуркаевым Альфиром Харисовичем 11.10.2024",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -257,12 +255,14 @@ fun SignUpScreen(
 
         if (viewModel.state.contentState.isLoading.value) LoadingDialog(onDismissRequest = {
             viewModel.onEvent(SignUpEvent.HideDialog)
-        })
+        }, isDarkTheme = isDarkTheme)
 
-        if (viewModel.state.showDialog) ContentDialog(text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
+        if (viewModel.state.showDialog) ContentDialog(
+            text = if (viewModel.state.contentState.exception.value != null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
             onDismissRequest = {
                 viewModel.onEvent(SignUpEvent.HideDialog)
-            })
+            }, isDarkTheme = isDarkTheme
+        )
 
         if (viewModel.state.success) {
             navController.navigate(Route.FillPersonDataScreen.withIntArguments(viewModel.state.user.id!!))

@@ -34,7 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.sexToString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.Table
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.PersonDataTable
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
@@ -160,7 +160,7 @@ fun AdminPatientsListScreen(
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Table(modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+            PersonDataTable(modifier = Modifier.clip(RoundedCornerShape(20.dp)),
                 columnCount = 17,
                 cellWidth = cellWidth,
                 data = viewModel.state.patients,

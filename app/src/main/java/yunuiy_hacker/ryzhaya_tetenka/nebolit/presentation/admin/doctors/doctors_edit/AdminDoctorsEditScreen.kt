@@ -109,7 +109,7 @@ fun AdminDoctorsEditScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .offset(x = -24.dp),
-                        text = "Редактирование пациента",
+                        text = "Редактирование врача",
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center
                     )

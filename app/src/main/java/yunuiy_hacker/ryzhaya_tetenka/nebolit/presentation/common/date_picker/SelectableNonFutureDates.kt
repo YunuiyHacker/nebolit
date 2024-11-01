@@ -14,3 +14,14 @@ object SelectableNonFutureDates : SelectableDates {
         return year <= LocalDate.now().year
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+object SelectableNonPastAndFuture24dDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+        return (utcTimeMillis >= System.currentTimeMillis() && utcTimeMillis <= System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 13))
+    }
+
+    override fun isSelectableYear(year: Int): Boolean {
+        return year >= LocalDate.now().year
+    }
+}

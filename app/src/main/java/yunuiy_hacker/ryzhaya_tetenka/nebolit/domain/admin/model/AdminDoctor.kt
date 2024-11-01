@@ -1,6 +1,7 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model
 
 data class AdminDoctor(
+    val id: Int = 0,
     val user_id: Int = 0,
     val surname: String = "",
     val name: String = "",

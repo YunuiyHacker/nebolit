@@ -6,7 +6,6 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.RegistrationDoctorModel
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.model.RegistrationPatientModel
 
 fun MutableList<Patient>.toAdminPatients(): MutableList<AdminPatient> {
     val mutableList: MutableList<AdminPatient> = mutableListOf()
@@ -44,6 +43,7 @@ fun MutableList<Doctor>.toAdminDoctors(): MutableList<AdminDoctor> {
     this.forEach { doctor ->
         mutableList.add(
             AdminDoctor(
+                id = doctor.id!!,
                 user_id = doctor.user?.id!!,
                 surname = doctor.user?.passport?.surname.toString(),
                 name = doctor.user?.passport?.name.toString(),

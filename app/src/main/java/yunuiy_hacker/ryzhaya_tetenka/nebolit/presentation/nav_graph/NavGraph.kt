@@ -19,6 +19,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_edit.AdminDoctorsEditScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_edit.AdminDoctorsEditViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_list.AdminDoctorsListScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_schedules.AdminDoctorsSchedulesScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_schedules.AdminDoctorsSchedulesViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.main.AdminMainScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_add.AdminPatientsAddScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.patients.patients_edit.AdminPatientEditScreen
@@ -30,6 +32,11 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_in.SignInScr
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.edit_person_data.EditPersonDataScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.home.HomeScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_doctor.SelectDoctorScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_doctor.SelectDoctorViewModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_specialization.SelectSpecializationScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_time.SelectTimeScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_time.SelectTimeViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.profile.ProfileScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.onboarding.OnboardingScreen
 
@@ -166,6 +173,60 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 
         composable(route = Route.AdminDoctorsAddScreen.route) {
             AdminDoctorsAddScreen(navController = navController)
+        }
+
+        composable(
+            route = Route.AdminDoctorsSchedulesScreen.route + "/{admin_doctor}",
+            arguments = listOf(navArgument("admin_doctor") {
+                type = NavType.StringType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: AdminDoctorsSchedulesViewModel = hiltViewModel()
+            val adminDoctor = gson.fromJson(
+                entry.arguments?.getString("admin_doctor")!!,
+                AdminDoctor::class.java
+            )
+            viewModel.state.adminDoctor =
+                adminDoctor
+            AdminDoctorsSchedulesScreen(
+                navController = navController,
+                viewModel = viewModel,
+                adminDoctor
+            )
+        }
+
+        //patient
+        composable(route = Route.SelectSpecializationScreen.route) {
+            SelectSpecializationScreen(navController = navController)
+        }
+
+        composable(
+            route = Route.SelectDoctorScreen.route + "/{specialization_id}",
+            arguments = listOf(navArgument("specialization_id") {
+                type = NavType.IntType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: SelectDoctorViewModel = hiltViewModel()
+            viewModel.state.specializationId = entry.arguments?.getInt("specialization_id")!!
+            SelectDoctorScreen(
+                navController = navController
+            )
+        }
+
+        composable(
+            route = Route.SelectTimeScreen.route + "/{doctor_id}",
+            arguments = listOf(navArgument("doctor_id") {
+                type = NavType.IntType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: SelectTimeViewModel = hiltViewModel()
+            viewModel.state.doctorId = entry.arguments?.getInt("doctor_id")!!
+            SelectTimeScreen(
+                navController = navController
+            )
         }
     }
 }

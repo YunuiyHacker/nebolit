@@ -1,10 +1,6 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.data
 
-import android.os.Build
-import android.os.Bundle
-import android.util.Patterns
 import kotlinx.datetime.LocalDate
-import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.regex.Pattern

@@ -16,32 +16,40 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefs
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllDoctorsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllPatientsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllSpecializationsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetCabinetsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RegistrationDoctorUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemovePatientUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.SaveDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminDoctorUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateAdminPatientUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.CheckRegistrationByEmail
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.DefineRole
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.GetPassportById
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.GetSpecializationById
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.LoadRoleObject
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadPatient
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadUser
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RegistrationPatientUseCase
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RegistrationUser
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SavePatient
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveUser
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.LogIn
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadPassport
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadPatient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.ReadUser
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RecordPassportUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RegistrationPatientUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.RegistrationUser
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SavePassport
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SavePatient
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveReadPersonDataUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SaveUser
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignInUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.UpdateUserPassportIdUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.DefineTimeOfDayUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetDoctorsBySpecializationUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetPatientAppointmentsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.UpdatePatientDataUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.API_KEY
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.utils.Constants.URL
@@ -168,4 +176,43 @@ object AppModule {
     @Provides
     fun provideGetAllSpecializationsUseCase(supabaseClient: SupabaseClient): GetAllSpecializationsUseCase =
         GetAllSpecializationsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideDefineTimeOfDayUseCase(): DefineTimeOfDayUseCase = DefineTimeOfDayUseCase()
+
+    @Singleton
+    @Provides
+    fun provideGetPatientAppointmentsUseCase(supabaseClient: SupabaseClient): GetPatientAppointmentsUseCase =
+        GetPatientAppointmentsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetDoctorsBySpecializationUseCase(supabaseClient: SupabaseClient): GetDoctorsBySpecializationUseCase =
+        GetDoctorsBySpecializationUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideSaveDoctorScheduleUseCase(supabaseClient: SupabaseClient): SaveDoctorScheduleUseCase =
+        SaveDoctorScheduleUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetDoctorSchedulesUseCase(supabaseClient: SupabaseClient): GetDoctorSchedulesUseCase =
+        GetDoctorSchedulesUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetCabinetsUseCase(supabaseClient: SupabaseClient): GetCabinetsUseCase =
+        GetCabinetsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideUpdateDoctorScheduleUseCase(supabaseClient: SupabaseClient): UpdateDoctorScheduleUseCase =
+        UpdateDoctorScheduleUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideRemoveDoctorScheduleUseCase(supabaseClient: SupabaseClient): RemoveDoctorScheduleUseCase =
+        RemoveDoctorScheduleUseCase(supabaseClient)
 }

@@ -34,7 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.sexToString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.Table
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.PersonDataTable
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
@@ -150,7 +150,7 @@ fun AdminDoctorsListScreen(
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Table(modifier = Modifier.clip(RoundedCornerShape(20.dp)),
+            PersonDataTable(modifier = Modifier.clip(RoundedCornerShape(20.dp)),
                 columnCount = 14,
                 cellWidth = cellWidth,
                 data = viewModel.state.doctors,
@@ -202,6 +202,26 @@ fun AdminDoctorsListScreen(
                 colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
                 Text(text = "Добавить нового врача")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    if (viewModel.state.tableSelectedDoctorIndex == -2) {
+                        viewModel.state.contentState.data.value = "Выберите врача"
+                        viewModel.state.showDialog = true
+                    } else {
+                        navController.navigate(
+                            Route.AdminDoctorsSchedulesScreen.withAdminDoctorArgument(
+                                viewModel.state.doctors[viewModel.state.tableSelectedDoctorIndex]
+                            )
+                        )
+                    }
+                },
+                shape = RoundedCornerShape(BUTTON_CORNER_RADIUS),
+                colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+            ) {
+                Text(text = "Просмотреть расписание")
             }
         }
     }

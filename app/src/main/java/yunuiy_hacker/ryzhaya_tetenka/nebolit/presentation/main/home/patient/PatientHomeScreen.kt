@@ -1,11 +1,14 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.home.patient
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -30,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.R
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.timeToString
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.model.TimeOfDay
@@ -139,6 +145,27 @@ fun PatientHomeScreen(
                 ), colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
                 Text(text = "Записаться на прием")
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    navController.navigate(Route.DiseasesHistoryScreen.route)
+                },
+                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 16.dp)
+            ) {
+                Column(modifier = Modifier.padding(paddingValues = PaddingValues(16.dp))) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.icon_disease),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "История болезней")
+                    }
+                }
             }
         }
     }

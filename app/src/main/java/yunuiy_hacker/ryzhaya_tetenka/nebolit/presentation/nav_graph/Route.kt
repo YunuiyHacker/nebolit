@@ -29,6 +29,7 @@ sealed class Route(val route: String) {
     data object SelectSpecializationScreen : Route("selectSpecializationScreen")
     data object SelectDoctorScreen : Route("selectDoctorScreen")
     data object SelectTimeScreen : Route("selectTimeScreen")
+    data object DiseasesHistoryScreen : Route("diseasesHistoryScreen")
 
     fun withIntArguments(vararg args: Int): String {
         return buildString {

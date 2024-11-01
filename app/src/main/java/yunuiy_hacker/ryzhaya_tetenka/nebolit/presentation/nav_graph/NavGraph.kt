@@ -30,6 +30,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.FillPersonDataViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_in.SignInScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.DiseaseHistoryScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.edit_person_data.EditPersonDataScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.home.HomeScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_doctor.SelectDoctorScreen
@@ -227,6 +228,10 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
             SelectTimeScreen(
                 navController = navController
             )
+        }
+
+        composable(route = Route.DiseasesHistoryScreen.route) {
+            DiseaseHistoryScreen(navController = navController)
         }
     }
 }

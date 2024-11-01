@@ -7,7 +7,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.DoctorSchedule
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.dateToLocalDateString
 import java.util.Date
 
-class GetDoctorSchedulesUseCase(private val supabaseClient: SupabaseClient) {
+class GetAdminDoctorSchedulesUseCase(private val supabaseClient: SupabaseClient) {
 
     suspend fun execute(doctorId: Int, startDate: Date, endDate: Date): List<DoctorSchedule> {
         return supabaseClient.postgrest.from("doctor_schedules").select {

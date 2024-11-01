@@ -53,7 +53,7 @@ import androidx.navigation.NavHostController
 import kotlinx.datetime.LocalTime
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.DoctorSchedule
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.ScheduleTable
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.AdminScheduleTable
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
@@ -123,7 +123,7 @@ fun AdminDoctorsSchedulesScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                ScheduleTable(
+                AdminScheduleTable(
                     modifier = Modifier.padding(PaddingValues(horizontal = 24.dp)),
                     doctorSchedules = state.doctorSchedules,
                     selectedSchedule = state.selectedDoctorSchedule,
@@ -309,7 +309,6 @@ fun AdminDoctorsSchedulesScreen(
                     text = "Сохранить", color = Color.White, fontSize = 15.sp
                 )
             }
-
         }
     }
 

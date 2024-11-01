@@ -17,5 +17,7 @@ data class DoctorSchedule(
     @SerialName("doctors")
     val doctor: Doctor? = null,
     @SerialName("cabinets")
-    val cabinet: Cabinet? = null
+    val cabinet: Cabinet? = null,
+    @SerialName("appointments")
+    val appointments: List<Appointment> = listOf()
 )

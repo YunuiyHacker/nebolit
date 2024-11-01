@@ -1,12 +1,15 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_specialization
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -98,7 +101,7 @@ fun SelectSpecializationScreen(
                 Text(text = "Выберите специальность", color = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(12.dp))
                 state.specializations.forEach { specialization ->
-                    Text(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 12.dp)
@@ -108,10 +111,25 @@ fun SelectSpecializationScreen(
                                         specialization
                                     )
                                 )
-                            },
-                        text = specialization.title.toString(),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                            }
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            text = specialization.title.toString(),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        if (state.specialization == specialization)
+                            Row(
+                                modifier = Modifier
+                                    .width(20.dp)
+                                    .height(2.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = RoundedCornerShape(10.dp)
+                                    )
+                            ) {}
+                    }
                 }
             }
         }

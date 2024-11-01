@@ -15,7 +15,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toDateOfMobileFormat
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toLocalDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetCabinetsUseCase
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetDoctorSchedulesUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAdminDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.SaveDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.UpdateDoctorScheduleUseCase
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AdminDoctorsSchedulesViewModel @Inject constructor(
     val dataStoreHelper: DataStoreHelper,
-    private val getDoctorSchedulesUseCase: GetDoctorSchedulesUseCase,
+    private val getDoctorSchedulesUseCase: GetAdminDoctorSchedulesUseCase,
     private val saveDoctorScheduleUseCase: SaveDoctorScheduleUseCase,
     private val getCabinetsUseCase: GetCabinetsUseCase,
     private val updateDoctorScheduleUseCase: UpdateDoctorScheduleUseCase,

@@ -46,7 +46,7 @@ fun generateDatesForTwoWeeks(): List<LocalDate> {
 }
 
 @Composable
-fun ScheduleTable(
+fun AdminScheduleTable(
     modifier: Modifier = Modifier,
     doctorSchedules: List<DoctorSchedule>,
     onChangeSelected: (doctorSchedule: DoctorSchedule) -> Unit,

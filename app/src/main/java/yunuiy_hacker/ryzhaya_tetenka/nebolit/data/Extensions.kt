@@ -1,19 +1,16 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.data
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.GregorianCalendar
 import java.util.regex.Pattern
 
 fun String.isEmail(): Boolean {
     return Pattern.compile(
-        "[a-z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-                "\\@" +
-                "[a-z0-9][a-z0-9\\-]{0,64}" +
-                "(" +
-                "\\." +
-                "[a-z0-9][a-z0-9\\-]{0,25}" +
-                ")+"
+        "[a-z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@" + "[a-z0-9][a-z0-9\\-]{0,64}" + "(" + "\\." + "[a-z0-9][a-z0-9\\-]{0,25}" + ")+"
     ).matcher(this).matches()
 }
 
@@ -61,12 +58,10 @@ fun String.isDepartmentCode(): Boolean {
     try {
         this.forEachIndexed { index, c ->
             if (index == 3) {
-                if (c == '-')
-                    result = true
+                if (c == '-') result = true
                 else result = false
             } else {
-                if (c.isDigit())
-                    result = true
+                if (c.isDigit()) result = true
                 else result = false
             }
         }
@@ -78,4 +73,12 @@ fun String.isDepartmentCode(): Boolean {
 
 fun Boolean.sexToString(): String {
     return if (this) "Муж" else "Жен"
+}
+
+fun LocalTime?.timeToString(): String {
+    return "${if (this?.hour?.toString()?.length == 1) "0${hour}" else this?.hour}:${if (this?.minute?.toString()?.length == 1) "0${minute}" else this?.minute}"
+}
+
+fun GregorianCalendar.toLocalTime(): LocalTime {
+    return LocalTime(hour = get(Calendar.HOUR_OF_DAY), minute = get(Calendar.MINUTE))
 }

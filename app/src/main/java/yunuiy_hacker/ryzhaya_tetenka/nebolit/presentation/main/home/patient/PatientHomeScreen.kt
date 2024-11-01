@@ -12,12 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.timeToString
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.model.TimeOfDay
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.ContentDialog
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dialog.LoadingDialog
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.BottomNavigation
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
@@ -37,6 +43,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 fun PatientHomeScreen(
     navController: NavHostController, viewModel: PatientHomeViewModel = hiltViewModel()
 ) {
+    val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
+
     val timeOfDay: TimeOfDay = viewModel.defineTimeOfDayUseCase.execute()
 
     LaunchedEffect(Unit) {
@@ -73,11 +81,10 @@ fun PatientHomeScreen(
                 }
             }, color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp)
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "Ваши записи", color = MaterialTheme.colorScheme.onSurface)
+            Text(text = "Ваши записи", color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(12.dp))
             ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = { },
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 16.dp),
                 colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -91,7 +98,21 @@ fun PatientHomeScreen(
                             modifier = Modifier.padding(12.dp)
                         ) {
                             items(viewModel.state.appointments) { item ->
-                                Text(text = item.patient.toString())
+                                Column {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(text = buildAnnotatedString {
+                                        append(item.doctorSchedule?.doctor?.let { doctor ->
+                                            doctor.user?.passport?.let { passport ->
+                                                doctor.specialization?.title + " " + passport.name + " " + passport.lastname + " " + item.doctorSchedule.date.toPassportDate() + " в " + item.doctorSchedule.time.timeToString()
+                                            }
+                                        })
+                                    }, color = MaterialTheme.colorScheme.onSurface)
+                                    if (item != viewModel.state.appointments.last()) {
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Divider()
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -111,18 +132,24 @@ fun PatientHomeScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = {
+                modifier = Modifier.fillMaxWidth(), onClick = {
                     navController.navigate(Route.SelectSpecializationScreen.route)
-                },
-                shape = RoundedCornerShape(
+                }, shape = RoundedCornerShape(
                     BUTTON_CORNER_RADIUS
-                ),
-                colors = ButtonDefaults.buttonColors(contentColor = Color.White)
+                ), colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
                 Text(text = "Записаться на прием")
             }
         }
     }
+
+    if (viewModel.state.contentState.isLoading.value) {
+        LoadingDialog(onDismissRequest = {}, isDarkTheme = isDarkTheme)
+    }
+
+    if (viewModel.state.showDialog) ContentDialog(
+        text = if (viewModel.state.contentState.data.value == null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
+        onDismissRequest = { viewModel.onEvent(PatientHomeEvent.HideDialogEvent) },
+        isDarkTheme = isDarkTheme
+    )
 }

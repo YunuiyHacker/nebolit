@@ -13,11 +13,11 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefsHelper
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAdminDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllDoctorsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllPatientsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllSpecializationsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetCabinetsUseCase
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RegistrationDoctorUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorScheduleUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.RemoveDoctorUseCase
@@ -48,6 +48,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignInUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.UpdateUserPassportIdUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.DefineTimeOfDayUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDoctorSchedulesUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.MakeAppointmentUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetDoctorsBySpecializationUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetPatientAppointmentsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.UpdatePatientDataUseCase
@@ -198,8 +200,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGetDoctorSchedulesUseCase(supabaseClient: SupabaseClient): GetDoctorSchedulesUseCase =
-        GetDoctorSchedulesUseCase(supabaseClient)
+    fun provideGetAdminDoctorSchedulesUseCase(supabaseClient: SupabaseClient): GetAdminDoctorSchedulesUseCase =
+        GetAdminDoctorSchedulesUseCase(supabaseClient)
 
     @Singleton
     @Provides
@@ -215,4 +217,14 @@ object AppModule {
     @Provides
     fun provideRemoveDoctorScheduleUseCase(supabaseClient: SupabaseClient): RemoveDoctorScheduleUseCase =
         RemoveDoctorScheduleUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetDoctorScheduleUseCase(supabaseClient: SupabaseClient): GetDoctorSchedulesUseCase =
+        GetDoctorSchedulesUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideMakeAppointmentUseCase(supabaseClient: SupabaseClient): MakeAppointmentUseCase =
+        MakeAppointmentUseCase(supabaseClient)
 }

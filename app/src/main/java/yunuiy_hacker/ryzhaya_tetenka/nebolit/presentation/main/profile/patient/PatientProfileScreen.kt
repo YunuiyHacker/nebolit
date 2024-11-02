@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -42,28 +41,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.sexToString
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.toPassportDate
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.PassportComposable
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.SettingsComposable
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.BottomNavigation
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph.Route
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.BUTTON_CORNER_RADIUS
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.ui.theme.Primary
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,7 +87,9 @@ fun PatientProfileScreen(
                     ) {
                         Column(
                             modifier = Modifier.background(
-                                if (viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value) Primary else Color.LightGray,
+                                if (viewModel.dataStoreHelper.getTheme()
+                                        .collectAsState(initial = false).value
+                                ) Primary else Color.LightGray,
                                 shape = CircleShape
                             ),
                         ) {
@@ -221,17 +215,15 @@ fun PatientProfileScreen(
                                 })
 
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        modifier = Modifier.weight(1f),
-                                        text = "Полис:",
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = viewModel.state.patient.policy.toString(),
-                                        color = Primary
-                                    )
-                                }
+                                Text(text = buildAnnotatedString {
+                                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
+                                        append("Адрес регистрации:")
+                                    }
+                                    append("  ")
+                                    withStyle(SpanStyle(color = Primary)) {
+                                        append(viewModel.state.patient.policy.toString())
+                                    }
+                                })
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(text = buildAnnotatedString {
                                     withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
@@ -239,33 +231,29 @@ fun PatientProfileScreen(
                                     }
                                     append("  ")
                                     withStyle(SpanStyle(color = Primary)) {
-                                        append(viewModel.state.patient.insuranceCompany.toString() + "fwefewfwefe")
+                                        append(viewModel.state.patient.insuranceCompany.toString())
                                     }
                                 })
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        modifier = Modifier.weight(1f),
-                                        text = "Рост:",
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = "${viewModel.state.patient.height} см",
-                                        color = Primary
-                                    )
-                                }
+                                Text(text = buildAnnotatedString {
+                                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
+                                        append("Рост:")
+                                    }
+                                    append("  ")
+                                    withStyle(SpanStyle(color = Primary)) {
+                                        append("${viewModel.state.patient.height} см")
+                                    }
+                                })
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        modifier = Modifier.weight(1f),
-                                        text = "Вес:",
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = "${viewModel.state.patient.weight} кг",
-                                        color = Primary
-                                    )
-                                }
+                                Text(text = buildAnnotatedString {
+                                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
+                                        append("Вес:")
+                                    }
+                                    append("  ")
+                                    withStyle(SpanStyle(color = Primary)) {
+                                        append("${viewModel.state.patient.weight} кг")
+                                    }
+                                })
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Button(
                                     modifier = Modifier.fillMaxWidth(),

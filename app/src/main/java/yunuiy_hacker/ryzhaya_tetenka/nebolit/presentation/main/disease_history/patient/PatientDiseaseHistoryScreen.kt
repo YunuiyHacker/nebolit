@@ -2,10 +2,8 @@ package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -74,7 +72,6 @@ fun PatientDiseaseHistoryScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
             if (viewModel.state.diseasesHistories.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -90,7 +87,15 @@ fun PatientDiseaseHistoryScreen(
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     items(viewModel.state.diseasesHistories) { diseaseHistory ->
                         DiseaseHistoryComposable(
-                            modifier = Modifier.padding(horizontal = 24.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp)
+                                .padding(
+                                    top = if (diseaseHistory == viewModel.state.diseasesHistories.get(
+                                            0
+                                        )
+                                    ) 24.dp else 0.dp,
+                                    bottom = if (diseaseHistory == viewModel.state.diseasesHistories.last()) 24.dp else 0.dp
+                                ),
                             diseaseHistory = diseaseHistory
                         )
                     }

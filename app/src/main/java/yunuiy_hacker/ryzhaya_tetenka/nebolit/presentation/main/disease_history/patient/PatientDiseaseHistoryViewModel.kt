@@ -1,4 +1,4 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.patient
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,19 +14,19 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDise
 import javax.inject.Inject
 
 @HiltViewModel
-class DiseaseHistoryViewModel @Inject constructor(
+class PatientDiseaseHistoryViewModel @Inject constructor(
     val dataStoreHelper: DataStoreHelper,
     private val sharedPrefsHelper: SharedPrefsHelper,
     private val getDiseasesHistoryUseCase: GetDiseasesHistoryUseCase
 ) : ViewModel() {
-    val state by mutableStateOf(DiseaseHistoryState())
+    val state by mutableStateOf(PatientDiseaseHistoryState())
 
-    fun onEvent(event: DiseaseHistoryEvent) {
+    fun onEvent(event: PatientDiseaseHistoryEvent) {
         when (event) {
-            is DiseaseHistoryEvent.GetDiseasesHistoryEvent -> getDiseasesHistory()
+            is PatientDiseaseHistoryEvent.GetDiseasesHistoryEvent -> getDiseasesHistory()
 
-            is DiseaseHistoryEvent.ShowDialogEvent -> state.showDialog = true
-            is DiseaseHistoryEvent.HideDialogEvent -> state.showDialog = false
+            is PatientDiseaseHistoryEvent.ShowDialogEvent -> state.showDialog = true
+            is PatientDiseaseHistoryEvent.HideDialogEvent -> state.showDialog = false
         }
     }
 

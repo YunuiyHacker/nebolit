@@ -126,7 +126,7 @@ fun SelectTimeScreen(
                                 )
                         )
                         Spacer(modifier = Modifier.width(24.dp))
-                        Text(text = "Свободные ячейки", color = MaterialTheme.colorScheme.onSurface)
+                        Text(text = "Свободная ячейка", color = MaterialTheme.colorScheme.onSurface)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row {
@@ -139,7 +139,7 @@ fun SelectTimeScreen(
                                 )
                         )
                         Spacer(modifier = Modifier.width(24.dp))
-                        Text(text = "Занятые ячейки", color = MaterialTheme.colorScheme.onSurface)
+                        Text(text = "Занятая ячейки", color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }

@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.gson.Gson
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.DoctorSchedule
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.admin.doctors.doctors_add.AdminDoctorsAddScreen
@@ -30,7 +31,9 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.fill_person_data.FillPersonDataViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_in.SignInScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.auth.sign_up.SignUpScreen
-import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.DiseaseHistoryScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.doctor.DoctorDiseaseHistoryScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.doctor.DoctorDiseaseHistoryViewModel
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.patient.PatientDiseaseHistoryScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.edit_person_data.EditPersonDataScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.home.HomeScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_doctor.SelectDoctorScreen
@@ -39,6 +42,8 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_time.SelectTimeScreen
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_time.SelectTimeViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.profile.ProfileScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.receive_patient.ReceivePatientScreen
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.receive_patient.ReceivePatientViewModel
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.onboarding.OnboardingScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -131,15 +136,11 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         ) { entry ->
             val viewModel: AdminPatientsEditViewModel = hiltViewModel()
             val adminPatient = gson.fromJson(
-                entry.arguments?.getString("admin_patient")!!,
-                AdminPatient::class.java
+                entry.arguments?.getString("admin_patient")!!, AdminPatient::class.java
             )
-            viewModel.state.adminPatient =
-                adminPatient
+            viewModel.state.adminPatient = adminPatient
             AdminPatientEditScreen(
-                navController = navController,
-                viewModel = viewModel,
-                adminPatient
+                navController = navController, viewModel = viewModel, adminPatient
             )
         }
 
@@ -160,15 +161,11 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         ) { entry ->
             val viewModel: AdminDoctorsEditViewModel = hiltViewModel()
             val adminDoctor = gson.fromJson(
-                entry.arguments?.getString("admin_doctor")!!,
-                AdminDoctor::class.java
+                entry.arguments?.getString("admin_doctor")!!, AdminDoctor::class.java
             )
-            viewModel.state.adminDoctor =
-                adminDoctor
+            viewModel.state.adminDoctor = adminDoctor
             AdminDoctorsEditScreen(
-                navController = navController,
-                viewModel = viewModel,
-                adminDoctor
+                navController = navController, viewModel = viewModel, adminDoctor
             )
         }
 
@@ -185,15 +182,11 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         ) { entry ->
             val viewModel: AdminDoctorsSchedulesViewModel = hiltViewModel()
             val adminDoctor = gson.fromJson(
-                entry.arguments?.getString("admin_doctor")!!,
-                AdminDoctor::class.java
+                entry.arguments?.getString("admin_doctor")!!, AdminDoctor::class.java
             )
-            viewModel.state.adminDoctor =
-                adminDoctor
+            viewModel.state.adminDoctor = adminDoctor
             AdminDoctorsSchedulesScreen(
-                navController = navController,
-                viewModel = viewModel,
-                adminDoctor
+                navController = navController, viewModel = viewModel, adminDoctor
             )
         }
 
@@ -231,7 +224,39 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
         }
 
         composable(route = Route.DiseasesHistoryScreen.route) {
-            DiseaseHistoryScreen(navController = navController)
+            PatientDiseaseHistoryScreen(navController = navController)
+        }
+
+        //doctor
+        composable(
+            route = Route.ReceivePatientScreen.route + "/{doctorSchedule}",
+            arguments = listOf(navArgument("doctorSchedule") {
+                type = NavType.StringType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: ReceivePatientViewModel = hiltViewModel()
+            val doctorSchedule = gson.fromJson(
+                entry.arguments?.getString("doctorSchedule")!!, DoctorSchedule::class.java
+            )
+            viewModel.state.doctorSchedule = doctorSchedule
+            ReceivePatientScreen(
+                navController = navController, viewModel = viewModel
+            )
+        }
+
+        composable(
+            route = Route.DoctorDiseaseHistoryScreen.route + "/{patient_id}",
+            arguments = listOf(navArgument("patient_id") {
+                type = NavType.IntType
+                nullable = false
+            })
+        ) { entry ->
+            val viewModel: DoctorDiseaseHistoryViewModel = hiltViewModel()
+            viewModel.state.patientId = entry.arguments?.getInt("patient_id")!!
+            DoctorDiseaseHistoryScreen(
+                navController = navController, viewModel = viewModel
+            )
         }
     }
 }

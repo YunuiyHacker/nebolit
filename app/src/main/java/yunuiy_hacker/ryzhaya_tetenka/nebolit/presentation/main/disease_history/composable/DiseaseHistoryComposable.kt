@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat
 fun DiseaseHistoryComposable(modifier: Modifier = Modifier, diseaseHistory: DiseaseHistory) {
     ElevatedCard(
         modifier = modifier,
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.onBackground),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 16.dp)
     ) {
         Column(
@@ -51,6 +51,15 @@ fun DiseaseHistoryComposable(modifier: Modifier = Modifier, diseaseHistory: Dise
                         append(diseaseHistory.doctor?.user?.passport?.let { passport ->
                             "${passport.surname} ${passport.name} ${passport.lastname}"
                         })
+                    }
+                }, color = MaterialTheme.colorScheme.onSurface)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = buildAnnotatedString {
+                    append("Специализация: ")
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        append(diseaseHistory.doctor?.specialization?.title)
                     }
                 }, color = MaterialTheme.colorScheme.onSurface)
             }
@@ -82,7 +91,7 @@ fun DiseaseHistoryComposable(modifier: Modifier = Modifier, diseaseHistory: Dise
                     append("Дата приема: ")
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
                         append(
-                            SimpleDateFormat("dd.MM.yyyy hh:mm").format(
+                            SimpleDateFormat("dd.MM.yyyy").format(
                                 diseaseHistory.date.toPassportDate().toDateOfMobileFormat()
                             )
                         )

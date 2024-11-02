@@ -9,12 +9,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.shared_prefs.SharedPrefsHelper
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.use_case.GetAllSpecializationsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SelectSpecializationViewModel @Inject constructor(
     val dataStoreHelper: DataStoreHelper,
+    private val sharedPrefsHelper: SharedPrefsHelper,
     private val getAllSpecializationsUseCase: GetAllSpecializationsUseCase
 ) :
     ViewModel() {
@@ -39,7 +41,9 @@ class SelectSpecializationViewModel @Inject constructor(
         GlobalScope.launch {
             runBlocking {
                 try {
-                    state.specializations = getAllSpecializationsUseCase.execute().toMutableList()
+                    state.specializations =
+                        getAllSpecializationsUseCase.execute(sex = sharedPrefsHelper.sex)
+                            .toMutableList()
 
                     state.contentState.isLoading.value = false
                 } catch (e: Exception) {

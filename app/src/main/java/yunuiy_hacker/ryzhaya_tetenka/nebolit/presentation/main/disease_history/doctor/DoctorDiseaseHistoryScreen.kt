@@ -1,4 +1,4 @@
-package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history
+package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.doctor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,13 +38,13 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.common.composable.dial
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.disease_history.composable.DiseaseHistoryComposable
 
 @Composable
-fun DiseaseHistoryScreen(
-    navController: NavHostController, viewModel: DiseaseHistoryViewModel = hiltViewModel()
+fun DoctorDiseaseHistoryScreen(
+    navController: NavHostController, viewModel: DoctorDiseaseHistoryViewModel = hiltViewModel()
 ) {
     val isDarkTheme = viewModel.dataStoreHelper.getTheme().collectAsState(initial = false).value
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(DiseaseHistoryEvent.GetDiseasesHistoryEvent)
+        viewModel.onEvent(DoctorDiseaseHistoryEvent.GetDiseasesHistoryEvent)
     }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.onBackground, topBar = {
@@ -51,9 +54,10 @@ fun DiseaseHistoryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .offset(x = -24.dp),
-                    text = "История болезней",
+                    text = "История болезней пациента",
                     fontSize = 18.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }, navigationIcon = {
@@ -75,15 +79,27 @@ fun DiseaseHistoryScreen(
                 .padding(it)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
+            if (viewModel.state.diseasesHistories.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 24.dp), text = buildAnnotatedString {
+                        append("Пациент ")
+                        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                            viewModel.state.diseasesHistories[0].patient?.user?.passport?.let { passport ->
+                                append("${passport.surname} ${passport.name} ${passport.lastname}")
+                            }
+                        }
+                    }, color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
             if (viewModel.state.diseasesHistories.isEmpty()) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Не нашли вашу историю болезней",
+                        text = "Не нашли историю болезней",
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -106,7 +122,7 @@ fun DiseaseHistoryScreen(
 
     if (viewModel.state.showDialog) ContentDialog(
         text = if (viewModel.state.contentState.data.value == null) viewModel.state.contentState.exception.value?.message.toString() else viewModel.state.contentState.data.value.toString(),
-        onDismissRequest = { viewModel.onEvent(DiseaseHistoryEvent.HideDialogEvent) },
+        onDismissRequest = { viewModel.onEvent(DoctorDiseaseHistoryEvent.HideDialogEvent) },
         isDarkTheme = isDarkTheme
     )
 }

@@ -51,6 +51,11 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.DefineT
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDiseasesHistoryUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.MakeAppointmentUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.doctor.use_case.GetPatientInfoUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.doctor.use_case.GetTreatmentResultsUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.doctor.use_case.GetTypesOfPaymentUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.doctor.use_case.GetVisitPurposesUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.doctor.use_case.SaveDiseaseHistoryUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetDoctorsBySpecializationUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetPatientAppointmentsUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.UpdatePatientDataUseCase
@@ -233,4 +238,29 @@ object AppModule {
     @Provides
     fun provideGetDiseasesHistoryUseCase(supabaseClient: SupabaseClient): GetDiseasesHistoryUseCase =
         GetDiseasesHistoryUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetPatientInfoUseCase(supabaseClient: SupabaseClient): GetPatientInfoUseCase =
+        GetPatientInfoUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetTypesOfPaymentUseCase(supabaseClient: SupabaseClient): GetTypesOfPaymentUseCase =
+        GetTypesOfPaymentUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetTreatmentResultsUseCase(supabaseClient: SupabaseClient): GetTreatmentResultsUseCase =
+        GetTreatmentResultsUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetVisitPurposesUseCase(supabaseClient: SupabaseClient): GetVisitPurposesUseCase =
+        GetVisitPurposesUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideSaveDiseaseHistoryUseCase(supabaseClient: SupabaseClient): SaveDiseaseHistoryUseCase =
+        SaveDiseaseHistoryUseCase(supabaseClient)
 }

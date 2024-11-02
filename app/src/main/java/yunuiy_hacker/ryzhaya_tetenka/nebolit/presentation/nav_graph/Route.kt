@@ -1,6 +1,7 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.nav_graph
 
 import com.google.gson.Gson
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.common.model.DoctorSchedule
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminDoctor
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.admin.model.AdminPatient
 
@@ -31,6 +32,10 @@ sealed class Route(val route: String) {
     data object SelectTimeScreen : Route("selectTimeScreen")
     data object DiseasesHistoryScreen : Route("diseasesHistoryScreen")
 
+    //doctor
+    data object ReceivePatientScreen : Route("receivePatientScreen")
+    data object DoctorDiseaseHistoryScreen : Route("doctorDiseaseScreen")
+
     fun withIntArguments(vararg args: Int): String {
         return buildString {
             append(route)
@@ -55,6 +60,15 @@ sealed class Route(val route: String) {
         return buildString {
             append(route)
             append("/${gson.toJson(adminDoctor)}")
+        }
+    }
+
+    fun withDoctorScheduleArgument(doctorSchedule: DoctorSchedule): String {
+        val gson: Gson = Gson()
+
+        return buildString {
+            append(route)
+            append("/${gson.toJson(doctorSchedule)}")
         }
     }
 }

@@ -1,8 +1,8 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.onboarding
 
-import android.provider.Settings.Global
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.data.local.data_store.DataStoreHelper
@@ -18,6 +18,7 @@ class OnboardingViewModel @Inject constructor(val dataStoreHelper: DataStoreHelp
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun saveAppEntry() {
         GlobalScope.launch {
             dataStoreHelper.setAppEntry()

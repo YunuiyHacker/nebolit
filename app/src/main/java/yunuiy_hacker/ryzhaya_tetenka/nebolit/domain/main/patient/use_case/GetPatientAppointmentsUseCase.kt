@@ -28,6 +28,7 @@ class GetPatientAppointmentsUseCase(private val supabaseClient: SupabaseClient) 
             it.doctorSchedule?.date.toPassportDate()
                 .toDateOfMobileFormat().time < calendar.time.time
         }
+        result.removeIf { it.appointmentStatusId != 1 }
 
         return result.sortedWith(compareBy<Appointment>({ it.doctorSchedule?.date }).thenBy({ it.doctorSchedule?.time }))
     }

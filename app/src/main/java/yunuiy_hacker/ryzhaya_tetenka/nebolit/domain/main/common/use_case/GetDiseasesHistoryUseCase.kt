@@ -9,7 +9,7 @@ class GetDiseasesHistoryUseCase(private val supabaseClient: SupabaseClient) {
 
     suspend fun execute(patientId: Int): List<DiseaseHistory> {
         return supabaseClient.postgrest.from("diseases_history")
-            .select(Columns.raw("id, doctor_id, type_of_payment_id, treatment_result_id, patient_id, visit_purpose_id, doctors(id, users(id, passports(id, surname, name, lastname)), specializations(id, title))), treatment_results(id, title), patients(id, users(id, passports(id, surname, name, lastname))), visit_purposes(id, title)")) {
+            .select(Columns.raw("id, doctor_id, type_of_payment_id, diagnosis, treatment_result_id, patient_id, visit_purpose_id, date, doctors(id, users(id, passports(id, surname, name, lastname)), specializations(id, title)), treatment_results(id, title), patients(id, users(id, passports(id, surname, name, lastname))), visit_purposes(id, title), types_of_payment(id, title)")) {
                 filter {
                     DiseaseHistory::patientId eq patientId
                 }

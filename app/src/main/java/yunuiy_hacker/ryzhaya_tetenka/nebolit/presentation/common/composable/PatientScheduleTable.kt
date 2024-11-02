@@ -91,7 +91,11 @@ fun PatientScheduleTable(
                                                 1.dp, MaterialTheme.colorScheme.primary
                                             )
                                         )
-                                        .background(color = MaterialTheme.colorScheme.surface)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.primary.copy(
+                                                0.77f
+                                            )
+                                        )
                                         .clickable {
                                             onChangeSelected(schedule)
                                         }
@@ -102,7 +106,9 @@ fun PatientScheduleTable(
                                                     1.dp, MaterialTheme.colorScheme.primary
                                                 )
                                             )
-//                                            .background(color = if (selectedSchedule == schedule) Primary40 else MaterialTheme.colorScheme.secondaryContainer)
+                                            .background(
+                                                color = MaterialTheme.colorScheme.surface
+                                            )
                                     }) {
                                         Text(
                                             text = schedule.time.toString(),
@@ -118,11 +124,15 @@ fun PatientScheduleTable(
                             }
                         } else {
                             Row(
-                                modifier = Modifier.border(
-                                    BorderStroke(
-                                        1.dp, MaterialTheme.colorScheme.primary
+                                modifier = Modifier
+                                    .border(
+                                        BorderStroke(
+                                            1.dp, MaterialTheme.colorScheme.primary
+                                        )
                                     )
-                                )
+                                    .background(
+                                        color = MaterialTheme.colorScheme.surface
+                                    )
                             ) {
                                 Text(
                                     text = "Нет записи",

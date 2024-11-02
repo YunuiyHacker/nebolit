@@ -1,6 +1,7 @@
 package yunuiy_hacker.ryzhaya_tetenka.nebolit.presentation.main.make_appointment.select_time
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -111,6 +114,34 @@ fun SelectTimeScreen(
                         viewModel.onEvent(SelectTimeEvent.SelectDoctorSchedule(it))
                         viewModel.onEvent(SelectTimeEvent.ShowMakeAppointmentEvent)
                     })
+                Spacer(modifier = Modifier.height(24.dp))
+                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.77f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(24.dp))
+                        Text(text = "Свободные ячейки", color = MaterialTheme.colorScheme.onSurface)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(24.dp))
+                        Text(text = "Занятые ячейки", color = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
             }
         }
     }

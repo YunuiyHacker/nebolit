@@ -54,6 +54,7 @@ fun PatientHomeScreen(
     val timeOfDay: TimeOfDay = viewModel.defineTimeOfDayUseCase.execute()
 
     LaunchedEffect(Unit) {
+        viewModel.onEvent(PatientHomeEvent.LoadPatientsDataEvent)
         viewModel.onEvent(PatientHomeEvent.GetAppointmentsEvent)
     }
 

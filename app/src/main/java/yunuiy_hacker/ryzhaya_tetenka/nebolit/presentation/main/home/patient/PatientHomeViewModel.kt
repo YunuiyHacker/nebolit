@@ -23,12 +23,11 @@ class PatientHomeViewModel @Inject constructor(
 ) : ViewModel() {
     val state by mutableStateOf(PatientHomeState())
 
-    init {
-        state.patient = saveReadPersonDataUseCase.readPatient.invoke()!!
-    }
-
     fun onEvent(event: PatientHomeEvent) {
         when (event) {
+            is PatientHomeEvent.LoadPatientsDataEvent -> state.patient =
+                saveReadPersonDataUseCase.readPatient.invoke()!!
+
             is PatientHomeEvent.GetAppointmentsEvent -> getAppointments()
 
             is PatientHomeEvent.ShowDialogEvent -> state.showDialog = true

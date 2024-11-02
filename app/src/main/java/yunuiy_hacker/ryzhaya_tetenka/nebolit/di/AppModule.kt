@@ -48,6 +48,7 @@ import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignInUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.SignUpUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.auth.use_case.UpdateUserPassportIdUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.DefineTimeOfDayUseCase
+import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDiseasesHistoryUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.GetDoctorSchedulesUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.common.use_case.MakeAppointmentUseCase
 import yunuiy_hacker.ryzhaya_tetenka.nebolit.domain.main.patient.use_case.GetDoctorsBySpecializationUseCase
@@ -227,4 +228,9 @@ object AppModule {
     @Provides
     fun provideMakeAppointmentUseCase(supabaseClient: SupabaseClient): MakeAppointmentUseCase =
         MakeAppointmentUseCase(supabaseClient)
+
+    @Singleton
+    @Provides
+    fun provideGetDiseasesHistoryUseCase(supabaseClient: SupabaseClient): GetDiseasesHistoryUseCase =
+        GetDiseasesHistoryUseCase(supabaseClient)
 }

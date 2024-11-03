@@ -147,101 +147,48 @@ fun ReceivePatientScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "Тип оплаты", color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(12.dp))
-                DropdownMenu(modifier = Modifier,
-                    expanded = typeOfPaymentExpanded,
-                    onDismissRequest = { typeOfPaymentExpanded = false }) {
-                    state.typesOfPayment.forEachIndexed { index, typeOfPayment ->
-                        DropdownMenuItem(text = {
-                            Text(
-                                text = typeOfPayment.title.toString(),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }, onClick = {
-                            viewModel.onEvent(
-                                ReceivePatientEvent.SelectTypeOfPayment(
-                                    typeOfPayment
-                                )
-                            )
-                            typeOfPaymentExpanded = false
-                        })
-                    }
-                }
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(
-                                BUTTON_CORNER_RADIUS
-                            )
-                        )
-                        .clickable { typeOfPaymentExpanded = true }) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = state.typeOfPayment.title ?: "",
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "Прием", color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(
-                                BUTTON_CORNER_RADIUS
-                            )
-                        )
-                        .clickable { visitPurposeExpanded = true }) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = state.visitPurpose.title ?: "",
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                DropdownMenu(modifier = Modifier,
-                    expanded = visitPurposeExpanded,
-                    onDismissRequest = { visitPurposeExpanded = false }) {
-                    state.visitPurposes.forEachIndexed { index, visitPurpose ->
-                        DropdownMenuItem(text = {
-                            Text(
-                                text = visitPurpose.title.toString(),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }, onClick = {
-                            viewModel.onEvent(
-                                ReceivePatientEvent.SelectVisitPurpose(
-                                    visitPurpose
-                                )
-                            )
-                            visitPurposeExpanded = false
-                        })
-                    }
-                }
-                if (state.visitPurpose.id == 2) {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(text = "Результат лечения", color = MaterialTheme.colorScheme.primary)
+                Column {
+                    Text(text = "Тип оплаты", color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(12.dp))
                     DropdownMenu(modifier = Modifier,
-                        expanded = treatmentResultExpanded,
-                        onDismissRequest = { treatmentResultExpanded = false }) {
-                        state.treatmentResults.forEachIndexed { index, treatmentResult ->
-                            DropdownMenuItem(text = {
+                        expanded = typeOfPaymentExpanded,
+                        onDismissRequest = { typeOfPaymentExpanded = false }) {
+                        state.typesOfPayment.forEachIndexed { index, typeOfPayment ->
+                            DropdownMenuItem(modifier = Modifier.fillMaxSize(), text = {
                                 Text(
-                                    text = treatmentResult.title.toString(),
+                                    text = typeOfPayment.title.toString(),
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }, onClick = {
                                 viewModel.onEvent(
-                                    ReceivePatientEvent.SelectTreatmentResult(
-                                        treatmentResult
+                                    ReceivePatientEvent.SelectTypeOfPayment(
+                                        typeOfPayment
                                     )
                                 )
-                                treatmentResultExpanded = false
+                                typeOfPaymentExpanded = false
                             })
                         }
                     }
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = RoundedCornerShape(
+                                    BUTTON_CORNER_RADIUS
+                                )
+                            )
+                            .clickable { typeOfPaymentExpanded = true }) {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = state.typeOfPayment.title ?: "",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+                Column {
+                    Text(text = "Прием", color = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         Modifier
@@ -252,12 +199,73 @@ fun ReceivePatientScreen(
                                     BUTTON_CORNER_RADIUS
                                 )
                             )
-                            .clickable { treatmentResultExpanded = true }) {
+                            .clickable { visitPurposeExpanded = true }) {
                         Text(
                             modifier = Modifier.padding(16.dp),
-                            text = state.treatmentResult.title ?: "",
+                            text = state.visitPurpose.title ?: "",
                             color = MaterialTheme.colorScheme.onSurface
                         )
+                    }
+                    DropdownMenu(modifier = Modifier,
+                        expanded = visitPurposeExpanded,
+                        onDismissRequest = { visitPurposeExpanded = false }) {
+                        state.visitPurposes.forEachIndexed { index, visitPurpose ->
+                            DropdownMenuItem(text = {
+                                Text(
+                                    text = visitPurpose.title.toString(),
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }, onClick = {
+                                viewModel.onEvent(
+                                    ReceivePatientEvent.SelectVisitPurpose(
+                                        visitPurpose
+                                    )
+                                )
+                                visitPurposeExpanded = false
+                            })
+                        }
+                    }
+                }
+                if (state.visitPurpose.id == 2) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Column {
+                        Text(text = "Результат лечения", color = MaterialTheme.colorScheme.primary)
+                        DropdownMenu(modifier = Modifier,
+                            expanded = treatmentResultExpanded,
+                            onDismissRequest = { treatmentResultExpanded = false }) {
+                            state.treatmentResults.forEachIndexed { index, treatmentResult ->
+                                DropdownMenuItem(text = {
+                                    Text(
+                                        text = treatmentResult.title.toString(),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }, onClick = {
+                                    viewModel.onEvent(
+                                        ReceivePatientEvent.SelectTreatmentResult(
+                                            treatmentResult
+                                        )
+                                    )
+                                    treatmentResultExpanded = false
+                                })
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = RoundedCornerShape(
+                                        BUTTON_CORNER_RADIUS
+                                    )
+                                )
+                                .clickable { treatmentResultExpanded = true }) {
+                            Text(
+                                modifier = Modifier.padding(16.dp),
+                                text = state.treatmentResult.title ?: "",
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))

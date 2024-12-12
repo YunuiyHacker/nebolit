@@ -55,3 +55,19 @@
   <img src="/../imgs/Рисунок16.jpg" width="200" alt="Картинка 16"/>
   <img src="/../imgs/Рисунок17.jpg" width="200" alt="Картинка 17"/>
 </p>
+
+<h3>Экраны администратора</h3>
+<p>
+  <img src="/../imgs/Рисунок18.jpg" width="200" alt="Картинка 18"/>
+  <img src="/../imgs/Рисунок19.jpg" width="200" alt="Картинка 19"/>
+  <img src="/../imgs/Рисунок20.jpg" width="200" alt="Картинка 20"/>
+  <img src="/../imgs/Рисунок21.jpg" width="200" alt="Картинка 21"/>
+  <img src="/../imgs/Рисунок22.jpg" width="200" alt="Картинка 22"/>
+  <img src="/../imgs/Рисунок23.jpg" width="200" alt="Картинка 23"/>
+  <img src="/../imgs/Рисунок24.jpg" width="200" alt="Картинка 24"/>
+  <img src="/../imgs/Рисунок25.jpg" width="200" alt="Картинка 25"/>
+  <img src="/../imgs/Рисунок26.jpg" width="200" alt="Картинка 26"/>
+  <img src="/../imgs/Рисунок27.jpg" width="200" alt="Картинка 27"/>
+  <img src="/../imgs/Рисунок28.jpg" width="200" alt="Картинка 28"/>
+  <img src="/../imgs/Рисунок29.jpg" width="200" alt="Картинка 29"/>
+</p>

@@ -47,3 +47,11 @@
   <img src="/../imgs/Рисунок12.jpg" width="200" alt="Картинка 12"/>
   <img src="/../imgs/Рисунок13.jpg" width="200" alt="Картинка 13"/>
 </p>
+
+<h3>Экраны врача</h3>
+<p>
+  <img src="/../imgs/Рисунок14.jpg" width="200" alt="Картинка 14"/>
+  <img src="/../imgs/Рисунок15.jpg" width="200" alt="Картинка 15"/>
+  <img src="/../imgs/Рисунок16.jpg" width="200" alt="Картинка 16"/>
+  <img src="/../imgs/Рисунок17.jpg" width="200" alt="Картинка 17"/>
+</p>
